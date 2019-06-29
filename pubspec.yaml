@@ -1,5 +1,5 @@
 name: jashan
-description: A new Flutter project.
+description: A playlist collaboration app that allows people who are in close proximity to curate a music playlist together on a host phone in real-time.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
