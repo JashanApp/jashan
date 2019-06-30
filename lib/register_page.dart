@@ -37,6 +37,7 @@ class RegisterPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
                     Icons.alternate_email,
