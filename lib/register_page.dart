@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/page.dart';
 
-class LogInPage extends FrontPage {
+class RegisterPage extends FrontPage {
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
         SizedBox(
-          height: 210,
+          height: 150,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,6 +37,23 @@ class LogInPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                decoration: InputDecoration(
+                  suffixIcon: Icon(
+                    CupertinoIcons.mail,
+                    color: Colors.white,
+                  ),
+                  hintStyle: TextStyle(color: Colors.white),
+                  border: UnderlineInputBorder(),
+                  hintText: 'Email',
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: 300,
+              child: TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
@@ -49,31 +66,30 @@ class LogInPage extends FrontPage {
                 ),
               ),
             ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 35,
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: 300,
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  suffixIcon: Icon(
+                    CupertinoIcons.padlock,
+                    color: Colors.white,
+                  ),
+                  hintStyle: TextStyle(color: Colors.white),
+                  border: UnderlineInputBorder(),
+                  hintText: 'Confirm password',
                 ),
-                Checkbox(
-                  onChanged: (bool value) {},
-                  value: false,
-                ),
-                Text('Remember me'),
-                SizedBox(
-                  width: 65,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Text('Forgot password?'),
-                ),
-              ],
+              ),
             ),
             SizedBox(
               height: 30,
             ),
             RaisedButton(
               child: Text(
-                "        LOG IN        ",
+                "        SIGN UP        ",
                 style: TextStyle(
                   color: Colors.orange,
                   fontWeight: FontWeight.bold,
@@ -87,42 +103,7 @@ class LogInPage extends FrontPage {
             ),
           ],
         ),
-        SizedBox(
-          height: 130,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                registerAccountButton(context);
-              },
-              child: Text(
-                'Don\'t have an account?',
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                registerAccountButton(context);
-              },
-              child: Text(
-                ' SIGN UP',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 40,
-        )
       ],
     );
-  }
-
-  void registerAccountButton(BuildContext context) {
-    Navigator.of(context).pushNamed('/register');
   }
 }

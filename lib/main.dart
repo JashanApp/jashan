@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/log_in_page.dart';
+import 'package:jashan/page.dart';
+import 'package:jashan/register_page.dart';
 
 void main() => runApp(JashanApp());
 
@@ -15,18 +17,10 @@ class JashanApp extends StatelessWidget {
         primaryTextTheme: Typography(platform: TargetPlatform.iOS).white,
         textTheme: Typography(platform: TargetPlatform.iOS).white,
       ),
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [Color.fromRGBO(0, 71, 255, 1), Color.fromRGBO(255, 117, 0, 1)],
-            ),
-          ),
-          child: LogInPage(),
-        ),
-      ),
+      routes: {
+        '/': (context) => FrontPageViewer(LogInPage()),
+        '/register': (context) => FrontPageViewer(RegisterPage()),
+      },
     );
   }
 }
