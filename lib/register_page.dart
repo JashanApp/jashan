@@ -22,7 +22,7 @@ class RegisterPage extends FrontPage {
               child: TextField(
                 decoration: InputDecoration(
                   suffixIcon: Icon(
-                    CupertinoIcons.person,
+                    Icons.person_outline,
                     color: Colors.white,
                   ),
                   hintStyle: TextStyle(color: Colors.white),
@@ -39,7 +39,7 @@ class RegisterPage extends FrontPage {
               child: TextField(
                 decoration: InputDecoration(
                   suffixIcon: Icon(
-                    CupertinoIcons.mail,
+                    Icons.alternate_email,
                     color: Colors.white,
                   ),
                   hintStyle: TextStyle(color: Colors.white),
@@ -57,7 +57,7 @@ class RegisterPage extends FrontPage {
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
-                    CupertinoIcons.padlock,
+                    Icons.lock_outline,
                     color: Colors.white,
                   ),
                   hintStyle: TextStyle(color: Colors.white),
@@ -75,7 +75,7 @@ class RegisterPage extends FrontPage {
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
-                    CupertinoIcons.padlock,
+                    Icons.lock_outline,
                     color: Colors.white,
                   ),
                   hintStyle: TextStyle(color: Colors.white),

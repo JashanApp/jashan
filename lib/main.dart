@@ -14,8 +14,8 @@ class JashanApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
         accentColor: Colors.blueAccent,
-        primaryTextTheme: Typography(platform: TargetPlatform.iOS).white,
-        textTheme: Typography(platform: TargetPlatform.iOS).white,
+        primaryTextTheme: Typography(platform: TargetPlatform.android).white,
+        textTheme: Typography(platform: TargetPlatform.android).white,
       ),
       routes: {
         '/': (context) => FrontPageViewer(LogInPage()),
