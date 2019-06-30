@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jashan/log_in_page.dart';
 
 void main() => runApp(JashanApp());
 
@@ -17,82 +18,15 @@ class JashanApp extends StatelessWidget {
       home: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/orange_background.jpg"),
-              fit: BoxFit.cover,
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Color.fromRGBO(0, 71, 255, 1), Color.fromRGBO(255, 117, 0, 1)],
             ),
           ),
           child: LogInPage(),
         ),
       ),
-    );
-  }
-}
-
-class LogInPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('LOG IN'),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 300,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(),
-                    hintText: 'Username',
-                  ),
-                ),
-              ),
-              Container(
-                width: 300,
-                child: TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(),
-                    hintText: 'Password',
-                  ),
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 35,
-                  ),
-                  Checkbox(
-                    onChanged: (bool value) {},
-                    value: false,
-                  ),
-                  Text('Remember me'),
-                  SizedBox(
-                    width: 65,
-                  ),
-                  Text('Forgot password?'),
-                ],
-              ),
-              RaisedButton(
-                child: Text("LOG IN"),
-                onPressed: () {},
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(75),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Text('Don\'t have an account? SIGN UP'),
-        SizedBox(
-          height: 30,
-        )
-      ],
     );
   }
 }
