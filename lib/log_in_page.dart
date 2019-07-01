@@ -1,8 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jashan/home_page.dart';
 import 'package:jashan/page.dart';
 
 class LogInPage extends FrontPage {
+  @override
+  State<StatefulWidget> createState() {
+    return LogInPageState();
+  }
+}
+
+class LogInPageState extends State<LogInPage> {
+  String _email;
+  String _password;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -20,6 +32,7 @@ class LogInPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (email) => _email = email,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
                     Icons.person_outline,
@@ -37,6 +50,7 @@ class LogInPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (password) => _password = password,
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
@@ -80,7 +94,9 @@ class LogInPage extends FrontPage {
                 ),
               ),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                logIn(context);
+              },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(75),
               ),
@@ -124,5 +140,20 @@ class LogInPage extends FrontPage {
 
   void registerAccountButton(BuildContext context) {
     Navigator.of(context).pushNamed('/register');
+  }
+
+  Future logIn(BuildContext context) async {
+    try {
+      FirebaseUser user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: _email, password: _password);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(user),
+        ),
+      );
+    } catch (e) {
+      print(e.message);
+    }
   }
 }

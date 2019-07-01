@@ -23,5 +23,5 @@ class FrontPageViewer extends StatelessWidget {
   }
 }
 
-abstract class FrontPage extends StatelessWidget {
+abstract class FrontPage extends StatefulWidget {
 }

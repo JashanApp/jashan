@@ -1,8 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/page.dart';
 
 class RegisterPage extends FrontPage {
+  @override
+  State<StatefulWidget> createState() {
+    return RegisterPageState();
+  }
+}
+
+class RegisterPageState extends State<RegisterPage> {
+  String _username;
+  String _password;
+  String _passwordConfirmed;
+  String _email;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -20,6 +33,7 @@ class RegisterPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (username) => _username = username,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
                     Icons.person_outline,
@@ -37,6 +51,7 @@ class RegisterPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (email) => _email = email,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
@@ -55,6 +70,7 @@ class RegisterPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (password) => _password = password,
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
@@ -73,6 +89,8 @@ class RegisterPage extends FrontPage {
             Container(
               width: 300,
               child: TextField(
+                onChanged: (passwordConfirmed) =>
+                    _passwordConfirmed = passwordConfirmed,
                 obscureText: true,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
@@ -97,7 +115,9 @@ class RegisterPage extends FrontPage {
                 ),
               ),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                signUp(context);
+              },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(75),
               ),
@@ -106,5 +126,17 @@ class RegisterPage extends FrontPage {
         ),
       ],
     );
+  }
+
+  Future signUp(BuildContext context) async {
+    if (_password == _passwordConfirmed) {
+      try {
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: _email, password: _password);
+        Navigator.pushReplacementNamed(context, '/');
+      } catch (e) {
+        print(e.message);
+      }
+    }
   }
 }
