@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -144,13 +145,23 @@ class LogInPageState extends State<LogInPage> {
 
   Future logIn(BuildContext context) async {
     try {
-      FirebaseUser user = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email, password: _password);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(user),
-        ),
+      Firestore.instance
+          .collection('users')
+          .where('username', isEqualTo: _email)
+          .getDocuments()
+          .then(
+        (snapshot) async {
+          var data = snapshot.documents.removeLast();
+          FirebaseUser user = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+                  email: data.data['email'], password: _password);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(user),
+            ),
+          );
+        },
       );
     } catch (e) {
       print(e.message);
