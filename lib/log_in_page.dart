@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/home_page.dart';
 import 'package:jashan/page.dart';
@@ -18,18 +17,10 @@ class LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        SizedBox(
-          height: 210,
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
           children: <Widget>[
-            SizedBox(
-              height: 20,
-            ),
             Container(
               width: 300,
               child: TextField(
@@ -102,40 +93,37 @@ class LogInPageState extends State<LogInPage> {
                 borderRadius: BorderRadius.circular(75),
               ),
             ),
-          ],
-        ),
-        SizedBox(
-          height: 130,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                registerAccountButton(context);
-              },
-              child: Text(
-                'Don\'t have an account?',
-              ),
+            SizedBox(
+              height: 10,
             ),
-            GestureDetector(
-              onTap: () {
-                registerAccountButton(context);
-              },
-              child: Text(
-                ' SIGN UP',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    registerAccountButton(context);
+                  },
+                  child: Text(
+                    'Don\'t have an account?',
+                  ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () {
+                    registerAccountButton(context);
+                  },
+                  child: Text(
+                    ' SIGN UP',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-        SizedBox(
-          height: 40,
-        )
-      ],
+      ),
     );
   }
 
