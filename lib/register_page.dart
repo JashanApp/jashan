@@ -162,6 +162,7 @@ class RegisterPageState extends State<RegisterPage> {
     await _validateUsername();
     await _validateEmail();
     if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
       try {
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);

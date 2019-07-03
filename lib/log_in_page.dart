@@ -154,6 +154,7 @@ class LogInPageState extends State<LogInPage> {
 
   Future _logIn(BuildContext context) async {
     if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
       try {
         Firestore.instance
             .collection('users')
