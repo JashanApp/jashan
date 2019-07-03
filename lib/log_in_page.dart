@@ -14,8 +14,12 @@ class LogInPage extends FrontPage {
 class LogInPageState extends State<LogInPage> {
   String _username;
   String _password;
+  String _usernameVerification;
+  String _passwordVerification;
 
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = new TextEditingController();
+  final TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +35,9 @@ class LogInPageState extends State<LogInPage> {
                     width: 300,
                     child: TextFormField(
                       validator: (username) {
-                        if (username.isEmpty) {
-                          return 'The username cannot be blank.';
-                        }
-                        return null;
+                        return _usernameVerification;
                       },
+                      controller: _usernameController,
                       onSaved: (username) => _username = username,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
@@ -55,11 +57,9 @@ class LogInPageState extends State<LogInPage> {
                     width: 300,
                     child: TextFormField(
                       validator: (password) {
-                        if (password.isEmpty) {
-                          return 'The password cannot be blank.';
-                        }
-                        return null;
+                        return _passwordVerification;
                       },
+                      controller: _passwordController,
                       onSaved: (password) => _password = password,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -153,30 +153,56 @@ class LogInPageState extends State<LogInPage> {
   }
 
   Future _logIn(BuildContext context) async {
+    _verifyUsername();
+    _verifyPassword();
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
-        Firestore.instance
+        QuerySnapshot snapshot = await Firestore.instance
             .collection('users')
             .where('username', isEqualTo: _username)
-            .getDocuments()
-            .then(
-              (snapshot) async {
-            var data = snapshot.documents.removeLast();
-            FirebaseUser user = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(
-                email: data.data['email'], password: _password);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(user),
-              ),
-            );
-          },
-        );
+            .getDocuments();
+        if (snapshot.documents.isEmpty) {
+          _usernameVerification = 'An account with that username does not exist.';
+          _passwordVerification = null;
+          _formKey.currentState.validate();
+        } else {
+          var data = snapshot.documents.removeLast();
+          FirebaseUser user = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+              email: data.data['email'], password: _password);
+          print('sureee');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(user),
+            ),
+          );
+        }
       } catch (e) {
+        if (e.code == 'ERROR_WRONG_PASSWORD') {
+          _usernameVerification = null;
+          _passwordVerification = 'The password inputted is incorrect.';
+          _formKey.currentState.validate();
+        }
         print(e.message);
       }
+    }
+  }
+
+  void _verifyUsername() {
+    if (_usernameController.text.isEmpty) {
+      _usernameVerification = 'The username cannot be blank.';
+    } else {
+      _usernameVerification = null;
+    }
+  }
+
+  void _verifyPassword() {
+    if (_passwordController.text.isEmpty) {
+      _passwordVerification = 'The password cannot be blank.';
+    } else {
+      _passwordVerification = null;
     }
   }
 }
