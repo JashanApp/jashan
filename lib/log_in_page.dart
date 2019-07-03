@@ -13,7 +13,7 @@ class LogInPage extends FrontPage {
 }
 
 class LogInPageState extends State<LogInPage> {
-  String _email;
+  String _username;
   String _password;
 
   @override
@@ -33,7 +33,7 @@ class LogInPageState extends State<LogInPage> {
             Container(
               width: 300,
               child: TextField(
-                onChanged: (email) => _email = email,
+                onChanged: (email) => _username = email,
                 decoration: InputDecoration(
                   suffixIcon: Icon(
                     Icons.person_outline,
@@ -147,7 +147,7 @@ class LogInPageState extends State<LogInPage> {
     try {
       Firestore.instance
           .collection('users')
-          .where('username', isEqualTo: _email)
+          .where('username', isEqualTo: _username)
           .getDocuments()
           .then(
         (snapshot) async {
