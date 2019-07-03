@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/home_page.dart';
 import 'package:jashan/front_page.dart';
+import 'package:jashan/home_page.dart';
 
 class LogInPage extends FrontPage {
   @override
@@ -15,44 +15,65 @@ class LogInPageState extends State<LogInPage> {
   String _username;
   String _password;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
-              width: 300,
-              child: TextField(
-                onChanged: (email) => _username = email,
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    Icons.person_outline,
-                    color: Colors.white,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: 300,
+                    child: TextFormField(
+                      validator: (username) {
+                        if (username.isEmpty) {
+                          return 'The username cannot be blank.';
+                        }
+                        return null;
+                      },
+                      onSaved: (username) => _username = username,
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(
+                          Icons.person_outline,
+                          color: Colors.white,
+                        ),
+                        hintStyle: TextStyle(color: Colors.white),
+                        border: UnderlineInputBorder(),
+                        hintText: 'Username',
+                      ),
+                    ),
                   ),
-                  hintStyle: TextStyle(color: Colors.white),
-                  border: UnderlineInputBorder(),
-                  hintText: 'Username',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              width: 300,
-              child: TextField(
-                onChanged: (password) => _password = password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  suffixIcon: Icon(
-                    Icons.lock_outline,
-                    color: Colors.white,
+                  SizedBox(
+                    height: 10,
                   ),
-                  hintStyle: TextStyle(color: Colors.white),
-                  border: UnderlineInputBorder(),
-                  hintText: 'Password',
-                ),
+                  Container(
+                    width: 300,
+                    child: TextFormField(
+                      validator: (password) {
+                        if (password.isEmpty) {
+                          return 'The password cannot be blank.';
+                        }
+                        return null;
+                      },
+                      onSaved: (password) => _password = password,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(
+                          Icons.lock_outline,
+                          color: Colors.white,
+                        ),
+                        hintStyle: TextStyle(color: Colors.white),
+                        border: UnderlineInputBorder(),
+                        hintText: 'Password',
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Row(
@@ -87,7 +108,7 @@ class LogInPageState extends State<LogInPage> {
               ),
               color: Colors.white,
               onPressed: () {
-                logIn(context);
+                _logIn(context);
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(75),
@@ -101,7 +122,7 @@ class LogInPageState extends State<LogInPage> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    registerAccountButton(context);
+                    _registerAccountButton(context);
                   },
                   child: Text(
                     'Don\'t have an account?',
@@ -109,7 +130,7 @@ class LogInPageState extends State<LogInPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    registerAccountButton(context);
+                    _registerAccountButton(context);
                   },
                   child: Text(
                     ' SIGN UP',
@@ -127,32 +148,34 @@ class LogInPageState extends State<LogInPage> {
     );
   }
 
-  void registerAccountButton(BuildContext context) {
+  void _registerAccountButton(BuildContext context) {
     Navigator.of(context).pushNamed('/register');
   }
 
-  Future logIn(BuildContext context) async {
-    try {
-      Firestore.instance
-          .collection('users')
-          .where('username', isEqualTo: _username)
-          .getDocuments()
-          .then(
-        (snapshot) async {
-          var data = snapshot.documents.removeLast();
-          FirebaseUser user = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: data.data['email'], password: _password);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(user),
-            ),
-          );
-        },
-      );
-    } catch (e) {
-      print(e.message);
+  Future _logIn(BuildContext context) async {
+    if (_formKey.currentState.validate()) {
+      try {
+        Firestore.instance
+            .collection('users')
+            .where('username', isEqualTo: _username)
+            .getDocuments()
+            .then(
+              (snapshot) async {
+            var data = snapshot.documents.removeLast();
+            FirebaseUser user = await FirebaseAuth.instance
+                .signInWithEmailAndPassword(
+                email: data.data['email'], password: _password);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(user),
+              ),
+            );
+          },
+        );
+      } catch (e) {
+        print(e.message);
+      }
     }
   }
 }
