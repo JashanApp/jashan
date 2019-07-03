@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/front_page.dart';
 import 'package:jashan/home_page.dart';
+import 'package:jashan/web_page.dart';
 
 class LogInPage extends FrontPage {
   @override
@@ -115,6 +116,25 @@ class LogInPageState extends State<LogInPage> {
               ),
             ),
             SizedBox(
+              height: 5,
+            ),
+            RaisedButton(
+              child: Text(
+                "  LOG IN WITH SPOTIFY  ",
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              color: Colors.white,
+              onPressed: () {
+                _logInWithSpotify(context);
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(75),
+              ),
+            ),
+            SizedBox(
               height: 10,
             ),
             Row(
@@ -163,14 +183,15 @@ class LogInPageState extends State<LogInPage> {
             .where('username', isEqualTo: _username)
             .getDocuments();
         if (snapshot.documents.isEmpty) {
-          _usernameVerification = 'An account with that username does not exist.';
+          _usernameVerification =
+              'An account with that username does not exist.';
           _passwordVerification = null;
           _formKey.currentState.validate();
         } else {
           var data = snapshot.documents.removeLast();
           FirebaseUser user = await FirebaseAuth.instance
               .signInWithEmailAndPassword(
-              email: data.data['email'], password: _password);
+                  email: data.data['email'], password: _password);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -203,5 +224,23 @@ class LogInPageState extends State<LogInPage> {
     } else {
       _passwordVerification = null;
     }
+  }
+
+  void _logInWithSpotify(BuildContext context) {
+    const String CLIENT_ID = '13734e89943a4249864bb67a9fdd3f9f';
+    const String RESPONSE_TYPE = 'code';
+    const String REDIRECT_URI = 'https://google.com';
+    const bool DEBUG = true;
+    // todo add a state
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebPageViewer(
+            'https://accounts.spotify.com/authorize?client_id=$CLIENT_ID'
+            '&response_type=$RESPONSE_TYPE&redirect_uri=$REDIRECT_URI'
+            '&show_dialog=$DEBUG}'),
+      ),
+    );
   }
 }
