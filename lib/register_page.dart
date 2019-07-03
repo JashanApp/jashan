@@ -21,6 +21,7 @@ class RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = new TextEditingController();
   final TextEditingController _emailController = new TextEditingController();
+  final TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +93,7 @@ class RegisterPageState extends State<RegisterPage> {
                         return null;
                       },
                       onSaved: (password) => _password = password,
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
@@ -113,7 +115,7 @@ class RegisterPageState extends State<RegisterPage> {
                       validator: (passwordConfirmed) {
                         if (passwordConfirmed.isEmpty) {
                           return 'Your password can\'t be blank.';
-                        } else if (_password != passwordConfirmed) {
+                        } else if (_passwordController.text != passwordConfirmed) {
                           return 'Your passwords do not match each other.';
                         }
                         return null;
