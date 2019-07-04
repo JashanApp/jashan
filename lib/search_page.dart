@@ -25,15 +25,6 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController _searchQueryController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    _searchItems.add(_SearchItem(
-        thumbnail: Image.asset('assets/images/jashan_black.png'),
-        title: 'Jashan',
-        artist: 'Rhythm Garg, Arham Siddiqui'));
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
