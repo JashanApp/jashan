@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jashan/search_page.dart';
 import 'package:jashan/user.dart';
 
 class HomePage extends StatelessWidget {
@@ -61,7 +61,17 @@ class HomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(75),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          print(user.accessToken);
+                          if (user.accessToken != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchPage(user),
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                     SizedBox(

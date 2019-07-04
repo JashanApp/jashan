@@ -276,12 +276,11 @@ class LogInPageState extends State<LogInPage> {
                 body: body);
 
         if (accessTokenResponse.statusCode == 200) {
-          Map valueMap = json.decode(accessTokenResponse.body);
-          print(valueMap);
+          Map token = json.decode(accessTokenResponse.body);
 
           Response userProfileResponse =
               await get('https://api.spotify.com/v1/me', headers: {
-            'Authorization': 'Bearer ${valueMap['access_token']}',
+            'Authorization': 'Bearer ${token['access_token']}',
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           });
@@ -303,6 +302,7 @@ class LogInPageState extends State<LogInPage> {
                 '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
             jashanUser = JashanUser(username: username);
           }
+          jashanUser.accessToken = token['access_token'];
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
