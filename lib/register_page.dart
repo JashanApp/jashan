@@ -42,8 +42,9 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Image.asset("assets/images/jashan_white.png"),
             SizedBox(
-              height: 20,
+              height: 50,
             ),
             Form(
               key: _formKey,
