@@ -26,7 +26,10 @@ class HomePage extends StatelessWidget {
               child: Container(
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.black.withOpacity(0.25),
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                  child: Image.asset('assets/images/jashan_white.png'),
+                ),
               ),
             ),
             Align(

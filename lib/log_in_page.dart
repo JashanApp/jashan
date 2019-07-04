@@ -31,6 +31,10 @@ class LogInPageState extends State<LogInPage> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            Image.asset("assets/images/jashan_white.png"),
+            SizedBox(
+              height: 50,
+            ),
             Form(
               key: _formKey,
               child: Column(
