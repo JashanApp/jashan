@@ -7,11 +7,22 @@ import 'package:jashan/front_page.dart';
 class RegisterPage extends FrontPage {
   @override
   State<StatefulWidget> createState() {
-    return RegisterPageState();
+    return _RegisterPageState();
+  }
+
+  static void signUp(String username, String email, String password) async {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    await Firestore.instance.collection('users').add(
+      {
+        'username': username,
+        'email': email,
+      },
+    );
   }
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> {
   String _username;
   String _password;
   String _email;
@@ -115,7 +126,8 @@ class RegisterPageState extends State<RegisterPage> {
                       validator: (passwordConfirmed) {
                         if (passwordConfirmed.isEmpty) {
                           return 'Your password can\'t be blank.';
-                        } else if (_passwordController.text != passwordConfirmed) {
+                        } else if (_passwordController.text !=
+                            passwordConfirmed) {
                           return 'Your passwords do not match each other.';
                         }
                         return null;
@@ -166,18 +178,8 @@ class RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
-        await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: _email, password: _password);
-        Firestore.instance.collection('users').add(
-          {
-            'username': _username,
-            'email': _email,
-          },
-        ).then(
-          (result) {
-            Navigator.pushReplacementNamed(context, '/');
-          },
-        );
+        RegisterPage.signUp(_username, _email, _password);
+        Navigator.pushReplacementNamed(context, '/');
       } catch (e) {
         print(e.message);
       }

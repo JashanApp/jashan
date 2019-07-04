@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jashan/user.dart';
 
 class HomePage extends StatelessWidget {
-  FirebaseUser user;
+  JashanUser user;
 
   HomePage(this.user);
 
@@ -36,9 +37,9 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'Welcome Arham!',
+                      'Welcome ${user.username}!',
                       style: TextStyle(
-                        fontSize: 48,
+                        fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -53,7 +54,7 @@ class HomePage extends StatelessWidget {
                           "HOST",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 32,
+                            fontSize: 28,
                           ),
                         ),
                         color: Colors.orange,
@@ -74,7 +75,7 @@ class HomePage extends StatelessWidget {
                           "CONNECT",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 32,
+                            fontSize: 28,
                           ),
                         ),
                         color: Colors.orange,

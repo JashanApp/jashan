@@ -7,6 +7,8 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart';
 import 'package:jashan/front_page.dart';
 import 'package:jashan/home_page.dart';
+import 'package:jashan/register_page.dart';
+import 'package:jashan/user.dart';
 
 class LogInPage extends FrontPage {
   @override
@@ -22,8 +24,6 @@ class LogInPageState extends State<LogInPage> {
   String _passwordVerification;
 
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = new TextEditingController();
-  final TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,6 @@ class LogInPageState extends State<LogInPage> {
                       validator: (username) {
                         return _usernameVerification;
                       },
-                      controller: _usernameController,
                       onSaved: (username) => _username = username,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
@@ -63,7 +62,6 @@ class LogInPageState extends State<LogInPage> {
                       validator: (password) {
                         return _passwordVerification;
                       },
-                      controller: _passwordController,
                       onSaved: (password) => _password = password,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -102,39 +100,45 @@ class LogInPageState extends State<LogInPage> {
             SizedBox(
               height: 30,
             ),
-            RaisedButton(
-              child: Text(
-                "        LOG IN        ",
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
+            SizedBox(
+              width: 200,
+              child: RaisedButton(
+                child: Text(
+                  "LOG IN",
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              color: Colors.white,
-              onPressed: () {
-                _logIn(context);
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(75),
+                color: Colors.white,
+                onPressed: () {
+                  _logIn(context);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(75),
+                ),
               ),
             ),
             SizedBox(
               height: 5,
             ),
-            RaisedButton(
-              child: Text(
-                "  LOG IN WITH SPOTIFY  ",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
+            SizedBox(
+              width: 200,
+              child: RaisedButton(
+                child: Text(
+                  "LOG IN WITH SPOTIFY",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              color: Colors.white,
-              onPressed: () {
-                _logInWithSpotify(context);
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(75),
+                color: Colors.green,
+                onPressed: () {
+                  _logInWithSpotify(context);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(75),
+                ),
               ),
             ),
             SizedBox(
@@ -176,32 +180,39 @@ class LogInPageState extends State<LogInPage> {
   }
 
   Future _logIn(BuildContext context) async {
+    _formKey.currentState.save();
     _verifyUsername();
     _verifyPassword();
     if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
       try {
-        QuerySnapshot snapshot = await Firestore.instance
-            .collection('users')
-            .where('username', isEqualTo: _username)
-            .getDocuments();
-        if (snapshot.documents.isEmpty) {
-          _usernameVerification =
-              'An account with that username does not exist.';
-          _passwordVerification = null;
-          _formKey.currentState.validate();
+        String email;
+        if (_username.contains('@')) {
+          email = _username;
         } else {
-          var data = snapshot.documents.removeLast();
-          FirebaseUser user = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: data.data['email'], password: _password);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(user),
-            ),
-          );
+          QuerySnapshot snapshot = await Firestore.instance
+              .collection('users')
+              .where('username', isEqualTo: _username)
+              .getDocuments();
+          if (snapshot.documents.isEmpty) {
+            _usernameVerification =
+                'An account with that username does not exist.';
+            _passwordVerification = null;
+            _formKey.currentState.validate();
+            return;
+          } else {
+            var data = snapshot.documents.removeLast();
+            email = data.data['email'];
+          }
         }
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: _password);
+        JashanUser jashanUser = JashanUser(username: _username);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(jashanUser),
+          ),
+        );
       } catch (e) {
         if (e.code == 'ERROR_WRONG_PASSWORD') {
           _usernameVerification = null;
@@ -214,7 +225,7 @@ class LogInPageState extends State<LogInPage> {
   }
 
   void _verifyUsername() {
-    if (_usernameController.text.isEmpty) {
+    if (_username.isEmpty) {
       _usernameVerification = 'The username cannot be blank.';
     } else {
       _usernameVerification = null;
@@ -222,19 +233,20 @@ class LogInPageState extends State<LogInPage> {
   }
 
   void _verifyPassword() {
-    if (_passwordController.text.isEmpty) {
+    if (_password.isEmpty) {
       _passwordVerification = 'The password cannot be blank.';
     } else {
       _passwordVerification = null;
     }
   }
 
-  void _logInWithSpotify(BuildContext context) {
+  void _logInWithSpotify(BuildContext context) async {
     const String CLIENT_ID = '13734e89943a4249864bb67a9fdd3f9f';
     const String CLIENT_SECRET = 'f4046fa141c24926b3ee730529ffcf2b';
     const String RESPONSE_TYPE = 'code';
     const String REDIRECT_URI = 'https://google.com';
-    const String SCOPE = 'user-modify-playback-state';
+    final String scope =
+        Uri.encodeFull('user-modify-playback-state user-read-email');
     const bool DEBUG = false;
     // todo add a state
 
@@ -242,12 +254,11 @@ class LogInPageState extends State<LogInPage> {
     flutterWebviewPlugin
         .launch('https://accounts.spotify.com/authorize?client_id=$CLIENT_ID'
             '&response_type=$RESPONSE_TYPE&redirect_uri=$REDIRECT_URI'
-            '&scope=$SCOPE&show_dialog=$DEBUG}');
-    flutterWebviewPlugin.onUrlChanged.listen((String url) {
+            '&scope=$scope&show_dialog=$DEBUG}');
+    flutterWebviewPlugin.onUrlChanged.listen((String url) async {
       if (url.contains('?code=')) {
         final String code =
             url.substring(url.indexOf('?code=') + '?code='.length);
-        print(code);
         flutterWebviewPlugin.close();
         const String GRANT_TYPE = 'authorization_code';
         Map<String, dynamic> body = {
@@ -255,20 +266,52 @@ class LogInPageState extends State<LogInPage> {
           "code": code,
           "redirect_uri": REDIRECT_URI
         };
-        post('https://accounts.spotify.com/api/token',
+        Response accessTokenResponse =
+            await post('https://accounts.spotify.com/api/token',
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',
                   'Authorization':
                       'Basic ${base64.encode(utf8.encode('$CLIENT_ID:$CLIENT_SECRET'))}'
                 },
-                body: body)
-            .then((response) {
-          if (response.statusCode == 200) {
-            Map valueMap = json.decode(response.body);
-            print(valueMap);
+                body: body);
 
-            // get list of playlists:
-            /*get('https://api.spotify.com/v1/me/playlists', headers: {
+        if (accessTokenResponse.statusCode == 200) {
+          Map valueMap = json.decode(accessTokenResponse.body);
+          print(valueMap);
+
+          Response userProfileResponse =
+              await get('https://api.spotify.com/v1/me', headers: {
+            'Authorization': 'Bearer ${valueMap['access_token']}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          });
+          Map userProfile = json.decode(userProfileResponse.body);
+
+          print(userProfile);
+          QuerySnapshot snapshot = await Firestore.instance
+              .collection('users')
+              .where('email', isEqualTo: userProfile['email'])
+              .getDocuments();
+          JashanUser jashanUser;
+          if (snapshot.documents.isNotEmpty) {
+            var data = snapshot.documents.removeLast();
+            jashanUser = JashanUser(username: data.data['username']);
+          } else {
+            String username = userProfile['email']
+                .substring(0, userProfile['email'].indexOf('@'));
+            RegisterPage.signUp(username, userProfile['email'],
+                '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+            jashanUser = JashanUser(username: username);
+          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(jashanUser),
+            ),
+          );
+
+          // get list of playlists:
+          /*get('https://api.spotify.com/v1/me/playlists', headers: {
               'Authorization':
                   'Bearer ${valueMap['access_token']}'
             }).then((response2) {
@@ -279,16 +322,16 @@ class LogInPageState extends State<LogInPage> {
               });
             });*/
 
-            // search songs:
-            /*get('https://api.spotify.com/v1/search?q="That\'s All She Wrote"&type=track', headers: {
+          // search songs:
+          /*get('https://api.spotify.com/v1/search?q="That\'s All She Wrote"&type=track', headers: {
               'Authorization':
               'Bearer ${valueMap['access_token']}'
             }).then((response2) {
               print(response2.body);
             });*/
 
-            // play song:
-            /*put('https://api.spotify.com/v1/me/player/play',
+          // play song:
+          /*put('https://api.spotify.com/v1/me/player/play',
                     headers: {
                       'Authorization': 'Bearer ${valueMap['access_token']}',
                       'Content-Type': 'application/json',
@@ -302,8 +345,7 @@ class LogInPageState extends State<LogInPage> {
                 .then((response2) {
               print(response2.body);
             });*/
-          }
-        });
+        }
       }
     });
   }
