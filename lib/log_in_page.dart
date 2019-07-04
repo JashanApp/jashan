@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:http/http.dart';
 import 'package:jashan/front_page.dart';
 import 'package:jashan/home_page.dart';
-import 'package:jashan/web_page.dart';
 
 class LogInPage extends FrontPage {
   @override
@@ -228,19 +231,80 @@ class LogInPageState extends State<LogInPage> {
 
   void _logInWithSpotify(BuildContext context) {
     const String CLIENT_ID = '13734e89943a4249864bb67a9fdd3f9f';
+    const String CLIENT_SECRET = 'f4046fa141c24926b3ee730529ffcf2b';
     const String RESPONSE_TYPE = 'code';
     const String REDIRECT_URI = 'https://google.com';
-    const bool DEBUG = true;
+    const String SCOPE = 'user-modify-playback-state';
+    const bool DEBUG = false;
     // todo add a state
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WebPageViewer(
-            'https://accounts.spotify.com/authorize?client_id=$CLIENT_ID'
+    FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
+    flutterWebviewPlugin
+        .launch('https://accounts.spotify.com/authorize?client_id=$CLIENT_ID'
             '&response_type=$RESPONSE_TYPE&redirect_uri=$REDIRECT_URI'
-            '&show_dialog=$DEBUG}'),
-      ),
-    );
+            '&scope=$SCOPE&show_dialog=$DEBUG}');
+    flutterWebviewPlugin.onUrlChanged.listen((String url) {
+      if (url.contains('?code=')) {
+        final String code =
+            url.substring(url.indexOf('?code=') + '?code='.length);
+        print(code);
+        flutterWebviewPlugin.close();
+        const String GRANT_TYPE = 'authorization_code';
+        Map<String, dynamic> body = {
+          "grant_type": GRANT_TYPE,
+          "code": code,
+          "redirect_uri": REDIRECT_URI
+        };
+        post('https://accounts.spotify.com/api/token',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Authorization':
+                      'Basic ${base64.encode(utf8.encode('$CLIENT_ID:$CLIENT_SECRET'))}'
+                },
+                body: body)
+            .then((response) {
+          if (response.statusCode == 200) {
+            Map valueMap = json.decode(response.body);
+            print(valueMap);
+
+            // get list of playlists:
+            /*get('https://api.spotify.com/v1/me/playlists', headers: {
+              'Authorization':
+                  'Bearer ${valueMap['access_token']}'
+            }).then((response2) {
+              Map playlistsResult = json.decode(response2.body);
+              List<dynamic> test = playlistsResult['items'];
+              test.forEach((thing) {
+                print(thing['name']);
+              });
+            });*/
+
+            // search songs:
+            /*get('https://api.spotify.com/v1/search?q="That\'s All She Wrote"&type=track', headers: {
+              'Authorization':
+              'Bearer ${valueMap['access_token']}'
+            }).then((response2) {
+              print(response2.body);
+            });*/
+
+            // play song:
+            /*put('https://api.spotify.com/v1/me/player/play',
+                    headers: {
+                      'Authorization': 'Bearer ${valueMap['access_token']}',
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                    },
+                    body: '{'
+                        '"context_uri": "spotify:album:5ht7ItJgpBH7W6vJ5BqpPr",'
+                        '"offset": {"position": 5},'
+                        '"position_ms": 0'
+                        '}')
+                .then((response2) {
+              print(response2.body);
+            });*/
+          }
+        });
+      }
+    });
   }
 }
