@@ -22,6 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _searching = false;
 
   List<_SearchItem> _searchItems = List<_SearchItem>();
+  TextEditingController _searchQueryController = TextEditingController();
 
   @override
   void initState() {
@@ -48,7 +49,8 @@ class _SearchPageState extends State<SearchPage> {
                 if (_searching) {
                   _appBarTitle = TextField(
                     autocorrect: false,
-                    onChanged: (searchQuery) {
+                    controller: _searchQueryController,
+                    onSubmitted: (searchQuery) {
                       if (searchQuery.length > 2) {
                         _searchItems.clear();
                         _repopulateSearchList(searchQuery);
@@ -88,12 +90,12 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  void _repopulateSearchList(String searchQuery) async {
+  Future _repopulateSearchList(String searchQuery) async {
     Response queryResponse = await get(
         'https://api.spotify.com/v1/search?q="$searchQuery"&type=track',
         headers: {'Authorization': 'Bearer ${widget.user.accessToken}'});
     List items = json.decode(queryResponse.body)['tracks']['items'];
-    setState(() {
+    return setState(() {
       items.forEach((albums) {
         Map album = albums['album'];
         String id = album['id'];
@@ -113,6 +115,7 @@ class _SearchPageState extends State<SearchPage> {
               title: name,
               artist: artistsString),
         );
+        print('searched for $searchQuery');
       });
     });
   }

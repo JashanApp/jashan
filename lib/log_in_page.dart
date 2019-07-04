@@ -95,7 +95,7 @@ class LogInPageState extends State<LogInPage> {
                 SizedBox(
                   width: 65,
                 ),
-                GestureDetector(
+                InkWell(
                   onTap: () {},
                   child: Text('Forgot password?'),
                 ),
@@ -151,7 +151,7 @@ class LogInPageState extends State<LogInPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     _registerAccountButton(context);
                   },
@@ -159,7 +159,7 @@ class LogInPageState extends State<LogInPage> {
                     'Don\'t have an account?',
                   ),
                 ),
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     _registerAccountButton(context);
                   },
