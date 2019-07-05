@@ -9,6 +9,7 @@ import 'package:jashan/front_page.dart';
 import 'package:jashan/home_page.dart';
 import 'package:jashan/register_page.dart';
 import 'package:jashan/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends FrontPage {
   @override
@@ -27,6 +28,7 @@ class LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
+    attemptInitialLogin();
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -211,6 +213,10 @@ class LogInPageState extends State<LogInPage> {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: _password);
         JashanUser jashanUser = JashanUser(username: _username);
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('email', email);
+        prefs.setString('password', _password);
+        prefs.setString('username', _username);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -295,17 +301,27 @@ class LogInPageState extends State<LogInPage> {
               .collection('users')
               .where('email', isEqualTo: userProfile['email'])
               .getDocuments();
+          String username;
           JashanUser jashanUser;
+          String defaultSpotifyPassword = '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8';
           if (snapshot.documents.isNotEmpty) {
             var data = snapshot.documents.removeLast();
-            jashanUser = JashanUser(username: data.data['username']);
+            username = data.data['username'];
           } else {
-            String username = userProfile['email']
+            String usernameParsedFromEmail = userProfile['email']
                 .substring(0, userProfile['email'].indexOf('@'));
-            RegisterPage.signUp(username, userProfile['email'],
-                '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
-            jashanUser = JashanUser(username: username);
+            RegisterPage.signUp(usernameParsedFromEmail, userProfile['email'], defaultSpotifyPassword);
+            username = usernameParsedFromEmail;
           }
+          jashanUser = JashanUser(username: username);
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('email', userProfile['email']);
+          prefs.setString('password', defaultSpotifyPassword);
+          /* todo fix the above code from the fact that it will not work when
+              users make existing accounts linked with spotify and log in
+              with spotify after doing that, or if a user who registered
+              using spotify changes their password */
+          prefs.setString('username', username);
           jashanUser.accessToken = token['access_token'];
           Navigator.pushReplacement(
             context,
@@ -352,5 +368,35 @@ class LogInPageState extends State<LogInPage> {
         }
       }
     });
+  }
+
+  Future attemptInitialLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('email');
+    String password = prefs.getString('password');
+    String username = prefs.getString('username');
+    if (email != null && password != null && username != null) {
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        JashanUser jashanUser = JashanUser(username: username);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(jashanUser),
+          ),
+        );
+      } catch (e) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'There was an error when logging in with your saved credentials (' + e.code + ').'),
+          ),
+        );
+        print(e.message);
+      }
+    } else {
+      print('no shared prefs saved');
+    }
   }
 }

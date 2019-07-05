@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FrontPageViewer extends StatelessWidget {
-  FrontPage frontPage;
+  final FrontPage frontPage;
 
   FrontPageViewer(this.frontPage);
 

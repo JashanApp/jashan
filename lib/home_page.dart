@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/search_page.dart';
+import 'package:jashan/settings_page.dart';
 import 'package:jashan/user.dart';
 
 class HomePage extends StatelessWidget {
-  JashanUser user;
+  final JashanUser user;
 
   HomePage(this.user);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: appBar,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -27,8 +27,36 @@ class HomePage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: Image.asset('assets/images/jashan_white.png'),
+                child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SettingsPage(user),
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Image.asset('assets/images/jashan_white.png'),
+                    ),
+                  ],
                 ),
               ),
             ),
