@@ -7,7 +7,7 @@ import 'package:http/http.dart';
 import 'package:jashan/user.dart';
 
 class SearchPage extends StatefulWidget {
-  JashanUser user;
+  final JashanUser user;
 
   SearchPage(this.user);
 
@@ -28,6 +28,9 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
         backgroundColor: Colors.orange,
         title: _appBarTitle,
         actions: <Widget>[
@@ -87,15 +90,14 @@ class _SearchPageState extends State<SearchPage> {
         headers: {'Authorization': 'Bearer ${widget.user.accessToken}'});
     List items = json.decode(queryResponse.body)['tracks']['items'];
     return setState(() {
-      items.forEach((albums) {
-        Map album = albums['album'];
-        String id = album['id'];
-        String imageUrl = album['images'][0]['url'];
-        String name = album['name'];
+      items.forEach((result) {
+        String imageUrl = result['album']['images'][0]['url'];
+        String id = result['id'];
+        String name = result['name'];
         const int CAP = 37;
         name =
             '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
-        List artists = album['artists'];
+        List artists = result['artists'];
         String artistsString = artists[0]['name'];
         for (int i = 1; i < artists.length; i++) {
           artistsString += ', ${artists[i]['name']}';
@@ -106,7 +108,6 @@ class _SearchPageState extends State<SearchPage> {
               title: name,
               artist: artistsString),
         );
-        print('searched for $searchQuery');
       });
     });
   }
@@ -122,41 +123,47 @@ class _SearchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: 50,
-            height: 50,
-            child: thumbnail,
-          ),
-          Container(
-            height: 50,
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 16),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(artist,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black,
-                        fontSize: 13)),
-              ],
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: 50,
+              height: 50,
+              child: thumbnail,
             ),
-          )
-        ],
+            Container(
+              height: 50,
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    artist,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

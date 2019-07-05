@@ -217,6 +217,7 @@ class LogInPageState extends State<LogInPage> {
         prefs.setString('email', email);
         prefs.setString('password', _password);
         prefs.setString('username', _username);
+        prefs.setBool('spotify', false);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -303,14 +304,16 @@ class LogInPageState extends State<LogInPage> {
               .getDocuments();
           String username;
           JashanUser jashanUser;
-          String defaultSpotifyPassword = '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8';
+          String defaultSpotifyPassword =
+              '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8';
           if (snapshot.documents.isNotEmpty) {
             var data = snapshot.documents.removeLast();
             username = data.data['username'];
           } else {
             String usernameParsedFromEmail = userProfile['email']
                 .substring(0, userProfile['email'].indexOf('@'));
-            RegisterPage.signUp(usernameParsedFromEmail, userProfile['email'], defaultSpotifyPassword);
+            RegisterPage.signUp(usernameParsedFromEmail, userProfile['email'],
+                defaultSpotifyPassword);
             username = usernameParsedFromEmail;
           }
           jashanUser = JashanUser(username: username);
@@ -322,6 +325,7 @@ class LogInPageState extends State<LogInPage> {
               with spotify after doing that, or if a user who registered
               using spotify changes their password */
           prefs.setString('username', username);
+          prefs.setBool('spotify', true);
           jashanUser.accessToken = token['access_token'];
           Navigator.pushReplacement(
             context,
@@ -375,28 +379,33 @@ class LogInPageState extends State<LogInPage> {
     String email = prefs.getString('email');
     String password = prefs.getString('password');
     String username = prefs.getString('username');
+    bool spotify = prefs.getBool('spotify');
     if (email != null && password != null && username != null) {
-      try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        JashanUser jashanUser = JashanUser(username: username);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(jashanUser),
-          ),
-        );
-      } catch (e) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'There was an error when logging in with your saved credentials (' + e.code + ').'),
-          ),
-        );
-        print(e.message);
+      if (spotify) {
+        _logInWithSpotify(context);
+      } else {
+        try {
+          await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: email, password: password);
+          JashanUser jashanUser = JashanUser(username: username);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(jashanUser),
+            ),
+          );
+        } catch (e) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  'There was an error when logging in with your saved credentials (' +
+                      e.code +
+                      ').'),
+            ),
+          );
+          print(e.message);
+        }
       }
-    } else {
-      print('no shared prefs saved');
     }
   }
 }
