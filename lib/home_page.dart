@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/search_page.dart';
 import 'package:jashan/settings_page.dart';
+import 'package:jashan/start_party_page.dart';
 import 'package:jashan/user.dart';
 
 class HomePage extends StatelessWidget {
@@ -98,7 +98,7 @@ class HomePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SearchPage(user),
+                                builder: (context) => StartPartyPage(user),
                               ),
                             );
                           }
