@@ -108,7 +108,9 @@ class _StartPartyPageState extends State<StartPartyPage> {
               TextField(
                 onChanged: (playlistName) {
                   if (_dropdownValue == '') {
-                    _selectedText = playlistName;
+                    setState(() {
+                      _selectedText = playlistName;
+                    });
                   }
                 },
                 style: TextStyle(
