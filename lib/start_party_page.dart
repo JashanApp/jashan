@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:jashan/party_page.dart';
 import 'package:jashan/playlist_item.dart';
 import 'package:jashan/user.dart';
 
@@ -202,7 +203,15 @@ class _StartPartyPageState extends State<StartPartyPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(75),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PartyPage(_selectedText, widget.user),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       SizedBox(
