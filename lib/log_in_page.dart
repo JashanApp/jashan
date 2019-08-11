@@ -333,42 +333,6 @@ class LogInPageState extends State<LogInPage> {
               builder: (context) => HomePage(jashanUser),
             ),
           );
-
-          // get list of playlists:
-          /*get('https://api.spotify.com/v1/me/playlists', headers: {
-              'Authorization':
-                  'Bearer ${valueMap['access_token']}'
-            }).then((response2) {
-              Map playlistsResult = json.decode(response2.body);
-              List<dynamic> test = playlistsResult['items'];
-              test.forEach((thing) {
-                print(thing['name']);
-              });
-            });*/
-
-          // search songs:
-          /*get('https://api.spotify.com/v1/search?q="That\'s All She Wrote"&type=track', headers: {
-              'Authorization':
-              'Bearer ${valueMap['access_token']}'
-            }).then((response2) {
-              print(response2.body);
-            });*/
-
-          // play song:
-          /*put('https://api.spotify.com/v1/me/player/play',
-                    headers: {
-                      'Authorization': 'Bearer ${valueMap['access_token']}',
-                      'Content-Type': 'application/json',
-                      'Accept': 'application/json'
-                    },
-                    body: '{'
-                        '"context_uri": "spotify:album:5ht7ItJgpBH7W6vJ5BqpPr",'
-                        '"offset": {"position": 5},'
-                        '"position_ms": 0'
-                        '}')
-                .then((response2) {
-              print(response2.body);
-            });*/
         }
       }
     });
