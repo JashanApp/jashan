@@ -180,6 +180,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return _playlistItems[index];
                                 },
+                                itemCount: _playlistItems.length,
                               )
                             : Center(
                                 child: Text('No songs!'),
@@ -239,7 +240,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
           Map trackInfo = track['track'];
           String imageUrl = trackInfo['album']['images'][0]['url'];
           String name = trackInfo['name'];
-          const int CAP = 37;
+          const int CAP = 35;
           name =
               '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
           List artists = trackInfo['artists'];
@@ -247,6 +248,8 @@ class _StartPartyPageState extends State<StartPartyPage> {
           for (int i = 1; i < artists.length; i++) {
             artistsString += ', ${artists[i]['name']}';
           }
+          artistsString =
+            '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
           _playlistItems.add(
             PlaylistItem(
               thumbnail: Image.network(imageUrl),

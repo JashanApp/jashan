@@ -119,6 +119,8 @@ class _PartyPageSearchingState extends State<_PartyPageSearching> {
         for (int i = 1; i < artists.length; i++) {
           artistsString += ', ${artists[i]['name']}';
         }
+        artistsString =
+          '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
         _searchItems.add(
           PlaylistItem(
               thumbnail: Image.network(imageUrl),
