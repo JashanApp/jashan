@@ -95,7 +95,26 @@ class _PartyPageSearchingState extends State<_PartyPageSearching> {
               height: 10,
             );
           }
-          return _searchItems[index - 1];
+          final PlaylistItem data = _searchItems[index - 1];
+          return PlaylistItemWidget(
+            data: data,
+            onClick: () {
+              put(
+                'https://api.spotify.com/v1/me/player/play',
+                headers: {
+                  'Authorization': 'Bearer ${widget.user.accessToken}',
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body:
+                '{'
+                    '"uris": ["${data.uri}"]'
+                '}',
+              ).then((response2) {
+                print(response2.body);
+              });
+            },
+          );
         },
       ),
     );
@@ -109,7 +128,7 @@ class _PartyPageSearchingState extends State<_PartyPageSearching> {
     return setState(() {
       items.forEach((result) {
         String imageUrl = result['album']['images'][0]['url'];
-        String id = result['id'];
+        String uri = result['uri'];
         String name = result['name'];
         const int CAP = 37;
         name =
@@ -120,12 +139,14 @@ class _PartyPageSearchingState extends State<_PartyPageSearching> {
           artistsString += ', ${artists[i]['name']}';
         }
         artistsString =
-          '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
+            '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
         _searchItems.add(
           PlaylistItem(
-              thumbnail: Image.network(imageUrl),
-              title: name,
-              artist: artistsString),
+            thumbnail: Image.network(imageUrl),
+            title: name,
+            artist: artistsString,
+            uri: uri,
+          ),
         );
       });
     });

@@ -38,9 +38,9 @@ class _StartPartyPageState extends State<StartPartyPage> {
         .then((response) {
       setState(() {
         Map playlistsResult = json.decode(response.body);
-        List<dynamic> test = playlistsResult['items'];
-        test.forEach((thing) {
-          _idForPlaylist[thing['name']] = thing['id'];
+        List<dynamic> playlists = playlistsResult['items'];
+        playlists.forEach((playlist) {
+          _idForPlaylist[playlist['name']] = playlist['id'];
         });
       });
     });
@@ -178,7 +178,9 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         child: _playlistItems.isNotEmpty
                             ? ListView.builder(
                                 itemBuilder: (BuildContext context, int index) {
-                                  return _playlistItems[index];
+                                  return PlaylistItemWidget(
+                                    data: _playlistItems[index],
+                                  );
                                 },
                                 itemCount: _playlistItems.length,
                               )
@@ -249,7 +251,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
             artistsString += ', ${artists[i]['name']}';
           }
           artistsString =
-            '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
+              '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
           _playlistItems.add(
             PlaylistItem(
               thumbnail: Image.network(imageUrl),

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class PlaylistItem extends StatelessWidget {
-  final Image thumbnail;
-  final String title;
-  final String artist;
+class PlaylistItemWidget extends StatelessWidget {
+  final PlaylistItem data;
+  final GestureTapCallback onClick;
 
-  PlaylistItem({@required this.thumbnail, @required this.title, @required this.artist});
+  PlaylistItemWidget({@required this.data, this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onClick == null ? () {} : onClick,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
         child: Row(
@@ -19,7 +18,7 @@ class PlaylistItem extends StatelessWidget {
             Container(
               width: 50,
               height: 50,
-              child: thumbnail,
+              child: data.thumbnail,
             ),
             Container(
               height: 50,
@@ -28,7 +27,7 @@ class PlaylistItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    title,
+                    data.title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -38,7 +37,7 @@ class PlaylistItem extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    artist,
+                    data.artist,
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       color: Colors.black,
@@ -53,4 +52,13 @@ class PlaylistItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class PlaylistItem {
+  final Image thumbnail;
+  final String title;
+  final String artist;
+  final String uri;
+
+  PlaylistItem({@required this.thumbnail, @required this.title, @required this.artist, this.uri});
 }
