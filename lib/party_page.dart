@@ -233,6 +233,11 @@ class _PartyPageViewState extends State<_PartyPageView> {
                       itemBuilder: (BuildContext context, int index) {
                         return PlaylistQueueItemCard(
                           data: widget.queue[index],
+                          onUpvoteChange: () {
+                            setState(() {
+                              widget.queue.sort();
+                            });
+                          },
                         );
                       },
                       itemCount: widget.queue.length,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:jashan/playlist_item.dart';
 
@@ -57,57 +59,68 @@ class PlaylistItemCard extends StatelessWidget {
 
 class PlaylistQueueItemCard extends StatelessWidget {
   final PlaylistQueueItem data;
-  final GestureTapCallback onClick;
+  final GestureTapCallback onUpvoteChange;
 
-  PlaylistQueueItemCard({@required this.data, this.onClick});
+  PlaylistQueueItemCard({@required this.data, this.onUpvoteChange});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onClick == null ? () {} : onClick,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: 45,
-            height: 45,
-            child: data.thumbnail,
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            data.title,
-            style: TextStyle(fontSize: 24, color: Colors.orange),
-          ),
-          SizedBox(
-            width: 50,
-          ),
-          Text(
-            "${data.upvotes}",
-            style: TextStyle(fontSize: 24, color: Colors.orange),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          IconButton(
-            iconSize: 24,
-            icon: Icon(Icons.keyboard_arrow_up),
-            onPressed: () {
-              data.upvotes++;
-            },
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          IconButton(
-            iconSize: 24,
-            icon: Icon(Icons.keyboard_arrow_down),
-            onPressed: () {
-              data.upvotes--;
-            },
-          )
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      child: InkWell(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 45,
+              height: 45,
+              child: data.thumbnail,
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Container(
+              width: 120,
+              child: Text(
+                "${data.title.substring(0, min(data.title.length, 8))}${data.title.length > 8 ? "..." : ""}",
+                style: TextStyle(fontSize: 22, color: Colors.orange),
+              ),
+            ),
+            SizedBox(
+              width: 50,
+            ),
+            Text(
+              "${data.upvotes}",
+              style: TextStyle(fontSize: 22, color: Colors.orange),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              iconSize: 24,
+              icon: Icon(
+                Icons.keyboard_arrow_up,
+                color: Colors.orange,
+              ),
+              onPressed: () {
+                data.upvotes++;
+                onUpvoteChange();
+              },
+            ),
+            IconButton(
+              iconSize: 24,
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.orange,
+              ),
+              onPressed: () {
+                data.upvotes--;
+                onUpvoteChange();
+              },
+            )
+          ],
+        ),
       ),
     );
   }

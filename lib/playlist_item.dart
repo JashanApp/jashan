@@ -26,7 +26,7 @@ class PlaylistQueueItem extends PlaylistItem implements Comparable {
   @override
   int compareTo(other) {
     if (other is PlaylistQueueItem) {
-      return upvotes - other.upvotes;
+      return other.upvotes - upvotes;
     }
     return 0;
   }
