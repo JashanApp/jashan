@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart';
-import 'package:jashan/front_page.dart';
-import 'package:jashan/home_page.dart';
-import 'package:jashan/register_page.dart';
-import 'package:jashan/user.dart';
+import 'package:jashan/pages/front/front_page.dart';
+import 'package:jashan/pages/home_page.dart';
+import 'package:jashan/pages/front/register_page.dart';
+import 'package:jashan/data/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends FrontPage {
@@ -28,7 +28,7 @@ class LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
-    attemptInitialLogin();
+    //attemptInitialLogin();
     return Center(
       child: SingleChildScrollView(
         child: Column(

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:jashan/playlist_item.dart';
+import 'package:jashan/data/playlist_item.dart';
 
 class PlaylistItemCard extends StatelessWidget {
   final PlaylistItem data;

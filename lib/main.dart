@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/log_in_page.dart';
-import 'package:jashan/front_page.dart';
-import 'package:jashan/register_page.dart';
+import 'package:jashan/pages/front/log_in_page.dart';
+import 'package:jashan/pages/front/front_page.dart';
+import 'package:jashan/pages/front/register_page.dart';
 
 void main() => runApp(JashanApp());
 

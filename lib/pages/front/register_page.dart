@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/front_page.dart';
+import 'package:jashan/pages/front/front_page.dart';
 
 class RegisterPage extends FrontPage {
   @override
