@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/data/playlist_item.dart';
-import 'package:jashan/views/playlist_item_view.dart';
+import 'package:jashan/widgets/playlist_item_card.dart';
 import 'package:jashan/data/user.dart';
 
 class StartPartyPage extends StatefulWidget {

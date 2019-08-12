@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jashan/data/playlist_queue_item.dart';
 import 'package:jashan/pages/party/party_page_searching.dart';
 import 'package:jashan/pages/party/party_page_view.dart';
-import 'package:jashan/data/playlist_item.dart';
 import 'package:jashan/util/sorted_queue_list.dart';
 import 'package:jashan/data/user.dart';
 

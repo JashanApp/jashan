@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:jashan/data/playlist_queue_item.dart';
 import 'package:jashan/pages/party/party_page.dart';
-import 'package:jashan/data/playlist_item.dart';
-import 'package:jashan/views/playlist_item_view.dart';
+import 'package:jashan/widgets/playlist_queue_item_card.dart';
 
 class PartyPageView extends StatefulWidget {
   final PartyPageState partyPageState;
@@ -67,27 +67,28 @@ class _PartyPageViewState extends State<PartyPageView> {
             ),
             Divider(color: Colors.black),
             Container(
-              height: 400, /* todo make this dynamic by using screen height */
+              height: 400,
+              /* todo make this dynamic by using screen height */
               child: widget.queue.isNotEmpty
                   ? ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return PlaylistQueueItemCard(
-                    data: widget.queue[index],
-                    onUpvoteChange: () {
-                      setState(() {
-                        widget.queue.sort();
-                      });
-                    },
-                  );
-                },
-                itemCount: widget.queue.length,
-              )
+                      itemBuilder: (BuildContext context, int index) {
+                        return PlaylistQueueItemCard(
+                          data: widget.queue[index],
+                          onUpvoteChange: () {
+                            setState(() {
+                              widget.queue.sort();
+                            });
+                          },
+                        );
+                      },
+                      itemCount: widget.queue.length,
+                    )
                   : Center(
-                child: Text(
-                  'No songs!',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
+                      child: Text(
+                        'No songs!',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
             )
           ],
         ),
