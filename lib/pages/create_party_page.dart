@@ -200,7 +200,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         height: 65,
                         child: RaisedButton(
                           child: Text(
-                            "Start Party!",
+                            "Create Party!",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 28,
