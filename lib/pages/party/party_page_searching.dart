@@ -114,6 +114,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         _searchItems.add(
           PlaylistItem(
             thumbnail: Image.network(imageUrl),
+            thumbnailUrl: imageUrl,
             title: name,
             artist: artistsString,
             uri: uri,

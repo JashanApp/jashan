@@ -24,12 +24,15 @@ class PartyPageView extends StatefulWidget {
 }
 
 class _PartyPageViewState extends State<PartyPageView> {
+  PlaylistQueueItem currentlyPlayingSong;
+
   @override
   void initState() {
     super.initState();
     widget.spotifyPlayer.setOnSongChange(() {
       setState(() {
-        widget.spotifyPlayer.playSong(widget.queue);
+        currentlyPlayingSong = widget.queue.removeFirst();
+        widget.spotifyPlayer.playSong(currentlyPlayingSong);
       });
     });
   }
@@ -84,21 +87,30 @@ class _PartyPageViewState extends State<PartyPageView> {
             ),
             Divider(color: Colors.black),
             Container(
-              height: 455,
+              height: 435,
               /* todo make this dynamic by using screen height */
               child: widget.queue.isNotEmpty
                   ? ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
+                        PlaylistQueueItem data;
+                        if (currentlyPlayingSong == null) {
+                          data = widget.queue[index];
+                        } else if (index == 0 && currentlyPlayingSong != null) {
+                          data = currentlyPlayingSong;
+                        } else if (index != 0 && currentlyPlayingSong != null) {
+                          data = widget.queue[index - 1];
+                        }
                         return PlaylistQueueItemCard(
-                          data: widget.queue[index],
-                          onUpvoteChange: () {
+                          data: data,
+                          onUpvoteChange: index != 0 || currentlyPlayingSong == null ? () {
                             setState(() {
                               widget.queue.sort();
                             });
-                          },
+                          } : () {},
+                          isCurrentPlaying: data == currentlyPlayingSong,
                         );
                       },
-                      itemCount: widget.queue.length,
+                      itemCount: widget.queue.length + (currentlyPlayingSong == null ? 0 : 1),
                     )
                   : Center(
                       child: Text(
@@ -129,7 +141,8 @@ class _PartyPageViewState extends State<PartyPageView> {
                     ),
                     onPressed: () {
                       setState(() {
-                        widget.spotifyPlayer.playSong(widget.queue);
+                        currentlyPlayingSong = widget.queue.removeFirst();
+                        widget.spotifyPlayer.playSong(currentlyPlayingSong);
                       });
                     },
                   ),
@@ -140,5 +153,11 @@ class _PartyPageViewState extends State<PartyPageView> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.spotifyPlayer.dispose();
   }
 }

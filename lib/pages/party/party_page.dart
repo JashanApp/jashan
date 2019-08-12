@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jashan/data/playlist_item.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page_searching.dart';
@@ -13,7 +14,11 @@ class PartyPage extends StatefulWidget {
   final QueueList<PlaylistQueueItem> queue = new SortedQueueList();
   final String playlistName;
 
-  PartyPage(this.playlistName, this.user);
+  PartyPage(this.playlistName, this.user, List<PlaylistItem> playlistItems) {
+    playlistItems.forEach((item) {
+      queue.add(new PlaylistQueueItem.fromPlaylistItem(item));
+    });
+  }
 
   @override
   State<StatefulWidget> createState() {

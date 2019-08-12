@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class PlaylistItem {
   final Image thumbnail;
+  final String thumbnailUrl;
   final String title;
   final String artist;
   final String uri;
@@ -9,8 +10,9 @@ class PlaylistItem {
 
   PlaylistItem(
       {@required this.thumbnail,
+      @required this.thumbnailUrl,
       @required this.title,
       @required this.artist,
-      this.uri,
-      this.durationMs});
+      @required this.uri,
+      @required this.durationMs});
 }

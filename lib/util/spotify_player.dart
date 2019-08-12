@@ -24,8 +24,9 @@ class SpotifyPlayer {
         'https://spotify-connect-ws.herokuapp.com/connect', // todo host our own
     ));
     socket.on("track_end", (message) {
-      // todo have a delay
-      onSongChange();
+      timer = new Timer(Duration(seconds: 1), () {
+        onSongChange();
+      });
     });
     socket.on("track_change", (message) {
       print('changed');
@@ -62,51 +63,11 @@ class SpotifyPlayer {
     this.onSongChange = onSongChange;
   }
 
-  void playSong(QueueList<PlaylistItem> queue) {
-    PlaylistItem playlistItem = queue.removeFirst();
-    socket.emit('play', [ { 'uris': ['${playlistItem.uri}'] } ]);
-    /*put(
-      'https://api.spotify.com/v1/me/player/play',
-      headers: {
-        'Authorization': 'Bearer ${user.accessToken}',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: '{'
-          '"uris": ["${playlistItem.uri}"]'
-          '}',
-    );*/
-   /* timerSongUri = playlistItem.uri;
-    // todo flaw with this approach: can adjust song time in spotify itself and ruin this
-    if (timer != null) {
-      timer.cancel();
-    }
-    timer = new Timer(Duration(milliseconds: playlistItem.durationMs + 1000),
-        () async {
-          // todo checks to not override user choice
-      //String currentSongUri = await _getCurrentSongUri();
-      *//*if (currentSongUri != timerSongUri) {
-        print('ded :( cuz $currentSongUri vs $timerSongUri');
-        return;
-      }*//*
-      onSongChange();
-    });*/
+  void playSong(PlaylistItem song) {
+    socket.emit('play', [ { 'uris': ['${song.uri}'] } ]);
   }
 
-  Future<String> _getCurrentSongUri() async {
-    Response response = await get(
-      'https://api.spotify.com/v1/me/player',
-      headers: {
-        'Authorization': 'Bearer ${user.accessToken}',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-    );
-    Map currentPlayback = json.decode(response.body);
-    Map context = currentPlayback['context'];
-    print(currentPlayback['context']);
-    return context['uri'];
+  void dispose() async {
+    await manager.clearInstance(socket);
   }
-
-// todo close web socket
 }

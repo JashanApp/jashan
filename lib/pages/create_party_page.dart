@@ -78,6 +78,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                           if (_dropdownValue ==
                               _StartPartyPageState.defaultDropboxText) {
                             _selectedText = _createTextController.text;
+                            _playlistItems.clear();
                           } else {
                             _selectedText = newValue;
                             _populatePlaylistSongs();
@@ -215,7 +216,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    PartyPage(_selectedText, widget.user),
+                                    PartyPage(_selectedText, widget.user, _playlistItems),
                               ),
                             );
                           },
@@ -246,6 +247,8 @@ class _StartPartyPageState extends State<StartPartyPage> {
           Map trackInfo = track['track'];
           String imageUrl = trackInfo['album']['images'][0]['url'];
           String name = trackInfo['name'];
+          int durationMs = trackInfo['duration_ms'];
+          String uri = trackInfo['uri'];
           const int CAP = 35;
           name =
               '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
@@ -259,8 +262,11 @@ class _StartPartyPageState extends State<StartPartyPage> {
           _playlistItems.add(
             PlaylistItem(
               thumbnail: Image.network(imageUrl),
+              thumbnailUrl: imageUrl,
               title: name,
               artist: artistsString,
+              uri: uri,
+              durationMs: durationMs,
             ),
           );
         });

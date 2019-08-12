@@ -6,8 +6,10 @@ import 'package:jashan/data/playlist_queue_item.dart';
 class PlaylistQueueItemCard extends StatelessWidget {
   final PlaylistQueueItem data;
   final GestureTapCallback onUpvoteChange;
+  final bool isCurrentPlaying;
 
-  PlaylistQueueItemCard({@required this.data, this.onUpvoteChange});
+  PlaylistQueueItemCard(
+      {@required this.data, this.onUpvoteChange, this.isCurrentPlaying});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,26 @@ class PlaylistQueueItemCard extends StatelessWidget {
           Container(
             width: 45,
             height: 45,
-            child: data.thumbnail,
+            child: isCurrentPlaying
+                ? Container(
+                    width: 45,
+                    height: 45,
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: Icon(
+                        Icons.audiotrack,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  )
+                : null,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(data.thumbnailUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           SizedBox(
             width: 15,

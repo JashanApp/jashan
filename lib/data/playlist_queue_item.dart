@@ -6,6 +6,7 @@ class PlaylistQueueItem extends PlaylistItem implements Comparable {
   PlaylistQueueItem.fromPlaylistItem(PlaylistItem playlistItem)
       : super(
       thumbnail: playlistItem.thumbnail,
+      thumbnailUrl: playlistItem.thumbnailUrl,
       title: playlistItem.title,
       artist: playlistItem.artist,
       uri: playlistItem.uri,
