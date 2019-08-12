@@ -28,7 +28,7 @@ class LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
-    //attemptInitialLogin();
+    attemptInitialLogin();
     return Center(
       child: SingleChildScrollView(
         child: Column(
