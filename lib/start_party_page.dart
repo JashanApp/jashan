@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:jashan/party_page.dart';
 import 'package:jashan/playlist_item.dart';
+import 'package:jashan/playlist_item_view.dart';
 import 'package:jashan/user.dart';
 
 class StartPartyPage extends StatefulWidget {
@@ -178,14 +179,17 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         child: _playlistItems.isNotEmpty
                             ? ListView.builder(
                                 itemBuilder: (BuildContext context, int index) {
-                                  return PlaylistItemWidget(
+                                  return PlaylistItemCard(
                                     data: _playlistItems[index],
                                   );
                                 },
                                 itemCount: _playlistItems.length,
                               )
                             : Center(
-                                child: Text('No songs!'),
+                                child: Text(
+                                  'No songs!',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
                       ),
                       SizedBox(

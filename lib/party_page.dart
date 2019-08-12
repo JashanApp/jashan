@@ -1,40 +1,49 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 import 'package:jashan/playlist_item.dart';
+import 'package:jashan/playlist_item_view.dart';
+import 'package:jashan/sorted_queue_list.dart';
 import 'package:jashan/user.dart';
 
 class PartyPage extends StatefulWidget {
   final JashanUser user;
   final String playlistName;
+  final QueueList<PlaylistQueueItem> queue = new SortedQueueList();
 
   PartyPage(this.playlistName, this.user);
 
   @override
   State<StatefulWidget> createState() {
-    return _PartyPageState();
+    return _PartyPageState(queue);
   }
 }
 
 class _PartyPageState extends State<PartyPage> {
   bool searching = false;
+  final QueueList<PlaylistQueueItem> queue;
+
+  _PartyPageState(this.queue);
 
   @override
   Widget build(BuildContext context) {
     return searching
-        ? _PartyPageSearching(this, widget.user)
-        : _PartyPageView(this, widget.playlistName);
+        ? _PartyPageSearching(this, widget.user, queue)
+        : _PartyPageView(this, widget.playlistName, queue);
   }
 }
 
 class _PartyPageSearching extends StatefulWidget {
   final _PartyPageState partyPageState;
   final JashanUser user;
+  final QueueList<PlaylistQueueItem> queue;
 
-  _PartyPageSearching(this.partyPageState, this.user);
+  _PartyPageSearching(this.partyPageState, this.user, this.queue);
 
   @override
   State<StatefulWidget> createState() {
@@ -96,23 +105,25 @@ class _PartyPageSearchingState extends State<_PartyPageSearching> {
             );
           }
           final PlaylistItem data = _searchItems[index - 1];
-          return PlaylistItemWidget(
+          return PlaylistItemCard(
             data: data,
             onClick: () {
-              put(
+              final PlaylistQueueItem queueItem =
+                  PlaylistQueueItem.fromPlaylistItem(data);
+              widget.queue.add(queueItem);
+              /* put(
                 'https://api.spotify.com/v1/me/player/play',
                 headers: {
                   'Authorization': 'Bearer ${widget.user.accessToken}',
                   'Content-Type': 'application/json',
                   'Accept': 'application/json'
                 },
-                body:
-                '{'
+                body: '{'
                     '"uris": ["${data.uri}"]'
-                '}',
+                    '}',
               ).then((response2) {
                 print(response2.body);
-              });
+              });*/
             },
           );
         },
@@ -156,8 +167,9 @@ class _PartyPageSearchingState extends State<_PartyPageSearching> {
 class _PartyPageView extends StatefulWidget {
   final _PartyPageState partyPageState;
   final String playlistName;
+  final QueueList<PlaylistQueueItem> queue;
 
-  _PartyPageView(this.partyPageState, this.playlistName);
+  _PartyPageView(this.partyPageState, this.playlistName, this.queue);
 
   @override
   State<StatefulWidget> createState() {
@@ -190,28 +202,50 @@ class _PartyPageViewState extends State<_PartyPageView> {
           ),
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Flexible(
-                child: Text(
-                  widget.playlistName,
-                  style: TextStyle(
-                    color: Colors.orange,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    widget.playlistName,
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            Divider(color: Colors.black),
+            Container(
+              height: 400, /* todo make this dynamic by using screen height */
+              child: widget.queue.isNotEmpty
+                  ? ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        return PlaylistQueueItemCard(
+                          data: widget.queue[index],
+                        );
+                      },
+                      itemCount: widget.queue.length,
+                    )
+                  : Center(
+                      child: Text(
+                        'No songs!',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+            )
+          ],
+        ),
       ),
     );
   }
