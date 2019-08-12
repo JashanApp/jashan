@@ -83,19 +83,6 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
               final PlaylistQueueItem queueItem =
               PlaylistQueueItem.fromPlaylistItem(data);
               widget.queue.add(queueItem);
-              /* put(
-                'https://api.spotify.com/v1/me/player/play',
-                headers: {
-                  'Authorization': 'Bearer ${widget.user.accessToken}',
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-                },
-                body: '{'
-                    '"uris": ["${data.uri}"]'
-                    '}',
-              ).then((response2) {
-                print(response2.body);
-              });*/
             },
           );
         },
@@ -113,6 +100,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         String imageUrl = result['album']['images'][0]['url'];
         String uri = result['uri'];
         String name = result['name'];
+        int durationMs = result['duration_ms'];
         const int CAP = 37;
         name =
         '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
@@ -129,6 +117,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             title: name,
             artist: artistsString,
             uri: uri,
+            durationMs: durationMs
           ),
         );
       });

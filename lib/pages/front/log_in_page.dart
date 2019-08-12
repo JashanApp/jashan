@@ -257,7 +257,7 @@ class LogInPageState extends State<LogInPage> {
     const String RESPONSE_TYPE = 'code';
     const String REDIRECT_URI = 'https://google.com';
     final String scope =
-        Uri.encodeFull('user-modify-playback-state user-read-email');
+        Uri.encodeFull('user-read-playback-state user-modify-playback-state user-read-email playlist-modify-private playlist-modify-public');
     const bool DEBUG = false;
     // todo add a state
 
@@ -296,8 +296,6 @@ class LogInPageState extends State<LogInPage> {
             'Accept': 'application/json'
           });
           Map userProfile = json.decode(userProfileResponse.body);
-
-          print(userProfile);
           QuerySnapshot snapshot = await Firestore.instance
               .collection('users')
               .where('email', isEqualTo: userProfile['email'])
@@ -327,6 +325,7 @@ class LogInPageState extends State<LogInPage> {
           prefs.setString('username', username);
           prefs.setBool('spotify', true);
           jashanUser.accessToken = token['access_token'];
+          jashanUser.spotifyUserId = userProfile['id'];
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

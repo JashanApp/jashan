@@ -3,15 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page_searching.dart';
 import 'package:jashan/pages/party/party_page_view.dart';
 import 'package:jashan/util/sorted_queue_list.dart';
-import 'package:jashan/data/user.dart';
 
 class PartyPage extends StatefulWidget {
   final JashanUser user;
-  final String playlistName;
   final QueueList<PlaylistQueueItem> queue = new SortedQueueList();
+  final String playlistName;
 
   PartyPage(this.playlistName, this.user);
 
@@ -22,10 +22,15 @@ class PartyPage extends StatefulWidget {
 }
 
 class PartyPageState extends State<PartyPage> {
-  bool searching = false;
   final QueueList<PlaylistQueueItem> queue;
+  bool searching = false;
 
   PartyPageState(this.queue);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

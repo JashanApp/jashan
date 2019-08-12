@@ -8,7 +8,8 @@ class PlaylistQueueItem extends PlaylistItem implements Comparable {
       thumbnail: playlistItem.thumbnail,
       title: playlistItem.title,
       artist: playlistItem.artist,
-      uri: playlistItem.uri);
+      uri: playlistItem.uri,
+      durationMs: playlistItem.durationMs);
 
   @override
   int compareTo(other) {
