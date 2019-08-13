@@ -42,7 +42,7 @@ class LogInPageState extends State<LogInPage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    width: 300,
+                    padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
                       validator: (username) {
                         return _usernameVerification;
@@ -63,7 +63,7 @@ class LogInPageState extends State<LogInPage> {
                     height: 10,
                   ),
                   Container(
-                    width: 300,
+                    padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
                       validator: (password) {
                         return _passwordVerification;
@@ -107,7 +107,7 @@ class LogInPageState extends State<LogInPage> {
               height: 30,
             ),
             SizedBox(
-              width: 200,
+              width: MediaQuery.of(context).size.width - 210,
               child: RaisedButton(
                 child: Text(
                   "LOG IN",
@@ -129,7 +129,7 @@ class LogInPageState extends State<LogInPage> {
               height: 5,
             ),
             SizedBox(
-              width: 200,
+              width: MediaQuery.of(context).size.width - 210,
               child: RaisedButton(
                 child: Text(
                   "LOG IN WITH SPOTIFY",

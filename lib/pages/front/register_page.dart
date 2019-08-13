@@ -51,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    width: 300,
+                    padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
                       validator: (username) {
                         return _usernameValidation;
@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   Container(
-                    width: 300,
+                    padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
                       validator: (email) {
                         return _emailValidation;
@@ -96,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   Container(
-                    width: 300,
+                    padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
                       validator: (password) {
                         if (password.isEmpty) {
@@ -122,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   Container(
-                    width: 300,
+                    padding: EdgeInsets.symmetric(horizontal: 60),
                     child: TextFormField(
                       validator: (passwordConfirmed) {
                         if (passwordConfirmed.isEmpty) {
@@ -151,20 +151,23 @@ class _RegisterPageState extends State<RegisterPage> {
             SizedBox(
               height: 30,
             ),
-            RaisedButton(
-              child: Text(
-                "        SIGN UP        ",
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 210,
+              child: RaisedButton(
+                child: Text(
+                  "SIGN UP",
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              color: Colors.white,
-              onPressed: () {
-                _signUp(context);
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(75),
+                color: Colors.white,
+                onPressed: () {
+                  _signUp(context);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(75),
+                ),
               ),
             ),
           ],
