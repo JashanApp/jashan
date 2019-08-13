@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart';
-import 'package:jashan/pages/front/front_page.dart';
-import 'package:jashan/pages/home_page.dart';
-import 'package:jashan/pages/front/register_page.dart';
 import 'package:jashan/data/user.dart';
+import 'package:jashan/pages/front/front_page.dart';
+import 'package:jashan/pages/front/register_page.dart';
+import 'package:jashan/pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends FrontPage {
@@ -42,7 +42,7 @@ class LogInPageState extends State<LogInPage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: TextFormField(
                       validator: (username) {
                         return _usernameVerification;
@@ -63,7 +63,7 @@ class LogInPageState extends State<LogInPage> {
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: TextFormField(
                       validator: (password) {
                         return _passwordVerification;
@@ -84,30 +84,37 @@ class LogInPageState extends State<LogInPage> {
                 ],
               ),
             ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 35,
-                ),
-                Checkbox(
-                  onChanged: (bool value) {},
-                  value: false,
-                ),
-                Text('Remember me'),
-                SizedBox(
-                  width: 65,
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text('Forgot password?'),
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.1,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Checkbox(
+                        onChanged: (bool value) {},
+                        value: false,
+                      ),
+                      Text('Remember me'),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Text('Forgot password?'),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 30,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width - 210,
+              width: MediaQuery.of(context).size.width / 2,
               child: RaisedButton(
                 child: Text(
                   "LOG IN",
@@ -129,7 +136,7 @@ class LogInPageState extends State<LogInPage> {
               height: 5,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width - 210,
+              width: MediaQuery.of(context).size.width / 2,
               child: RaisedButton(
                 child: Text(
                   "LOG IN WITH SPOTIFY",
@@ -256,8 +263,8 @@ class LogInPageState extends State<LogInPage> {
     const String CLIENT_SECRET = 'f4046fa141c24926b3ee730529ffcf2b';
     const String RESPONSE_TYPE = 'code';
     const String REDIRECT_URI = 'https://google.com';
-    final String scope =
-        Uri.encodeFull('user-read-playback-state user-modify-playback-state user-read-email playlist-modify-private playlist-modify-public');
+    final String scope = Uri.encodeFull(
+        'user-read-playback-state user-modify-playback-state user-read-email playlist-modify-private playlist-modify-public');
     const bool DEBUG = false;
     // todo add a state
 

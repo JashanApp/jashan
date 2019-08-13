@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
                       height: 50,
                     ),
                     SizedBox(
-                      width: 200,
+                      width: MediaQuery.of(context).size.width / 2,
                       height: 50,
                       child: RaisedButton(
                         child: Text(
@@ -109,7 +109,7 @@ class HomePage extends StatelessWidget {
                       height: 20,
                     ),
                     SizedBox(
-                      width: 200,
+                      width: MediaQuery.of(context).size.width / 2,
                       height: 50,
                       child: RaisedButton(
                         child: Text(

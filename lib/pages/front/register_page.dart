@@ -51,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: TextFormField(
                       validator: (username) {
                         return _usernameValidation;
@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: TextFormField(
                       validator: (email) {
                         return _emailValidation;
@@ -96,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: TextFormField(
                       validator: (password) {
                         if (password.isEmpty) {
@@ -122,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: TextFormField(
                       validator: (passwordConfirmed) {
                         if (passwordConfirmed.isEmpty) {
@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 30,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width - 210,
+              width: MediaQuery.of(context).size.width / 2,
               child: RaisedButton(
                 child: Text(
                   "SIGN UP",
