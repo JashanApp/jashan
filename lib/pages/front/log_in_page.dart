@@ -23,6 +23,7 @@ class LogInPageState extends State<LogInPage> {
   String _password;
   String _usernameVerification;
   String _passwordVerification;
+  bool _rememberMe = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -94,8 +95,8 @@ class LogInPageState extends State<LogInPage> {
                   Row(
                     children: <Widget>[
                       Checkbox(
-                        onChanged: (bool value) {},
-                        value: false,
+                        onChanged: (bool value) => setState(() => _rememberMe = !_rememberMe),
+                        value: _rememberMe,
                       ),
                       Text('Remember me'),
                     ],
@@ -220,11 +221,13 @@ class LogInPageState extends State<LogInPage> {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: _password);
         JashanUser jashanUser = JashanUser(username: _username);
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('email', email);
-        prefs.setString('password', _password);
-        prefs.setString('username', _username);
-        prefs.setBool('spotify', false);
+        if (_rememberMe) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('email', email);
+          prefs.setString('password', _password);
+          prefs.setString('username', _username);
+          prefs.setBool('spotify', false);
+        }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -322,15 +325,18 @@ class LogInPageState extends State<LogInPage> {
             username = usernameParsedFromEmail;
           }
           jashanUser = JashanUser(username: username);
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('email', userProfile['email']);
-          prefs.setString('password', defaultSpotifyPassword);
-          /* todo fix the above code from the fact that it will not work when
+          if (_rememberMe) {
+            final SharedPreferences prefs = await SharedPreferences
+                .getInstance();
+            prefs.setString('email', userProfile['email']);
+            prefs.setString('password', defaultSpotifyPassword);
+            /* todo fix the above code from the fact that it will not work when
               users make existing accounts linked with spotify and log in
               with spotify after doing that, or if a user who registered
               using spotify changes their password */
-          prefs.setString('username', username);
-          prefs.setBool('spotify', true);
+            prefs.setString('username', username);
+            prefs.setBool('spotify', true);
+          }
           jashanUser.accessToken = token['access_token'];
           jashanUser.spotifyUserId = userProfile['id'];
           Navigator.pushReplacement(
