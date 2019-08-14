@@ -15,8 +15,10 @@ class FrontPageViewer extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color.fromRGBO(255, 117, 0, 1),
-              Color.fromRGBO(224, 178, 132, 1)
+              Colors.deepPurple,
+              Colors.purpleAccent,
+              /*Color.fromRGBO(255, 117, 0, 1),
+              Color.fromRGBO(224, 178, 132, 1)*/
             ],
           ),
         ),

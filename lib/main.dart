@@ -12,8 +12,8 @@ class JashanApp extends StatelessWidget {
     return MaterialApp(
       title: 'Jashan',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        primaryColor: Colors.orange,
+        primarySwatch: Colors.deepPurple,
+        primaryColor: Colors.deepPurple,
         accentColor: Colors.white,
         primaryTextTheme: Typography(platform: TargetPlatform.android).white,
         textTheme: Typography(platform: TargetPlatform.android).white,

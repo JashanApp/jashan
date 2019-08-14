@@ -47,7 +47,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           ),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 14.0),
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: Icon(Icons.search, color: Theme.of(context).accentColor),
             hintText: "Search...",
             hintStyle: TextStyle(color: Theme.of(context).accentColor),
           ),

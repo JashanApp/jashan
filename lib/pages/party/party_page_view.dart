@@ -153,7 +153,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                           fontSize: 20,
                         ),
                       ),
-                      color: Colors.orange,
+                      color: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(75),
                       ),
