@@ -16,7 +16,9 @@ class PartyPage extends StatefulWidget {
 
   PartyPage(this.playlistName, this.user, List<PlaylistItem> playlistItems) {
     playlistItems.forEach((item) {
-      queue.add(new PlaylistQueueItem.fromPlaylistItem(item));
+      var playlistQueueItem = new PlaylistQueueItem.fromPlaylistItem(item);
+      playlistQueueItem.upvotes.add(user);
+      queue.add(playlistQueueItem);
     });
   }
 
@@ -41,6 +43,6 @@ class PartyPageState extends State<PartyPage> {
   Widget build(BuildContext context) {
     return searching
         ? PartyPageSearching(this, widget.user, queue)
-        : PartyPageView(this, widget.playlistName, queue);
+        : PartyPageView(widget.user, this, widget.playlistName, queue);
   }
 }

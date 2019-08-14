@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/spotify_player.dart';
 import 'package:jashan/widgets/playlist_queue_item_card.dart';
@@ -9,13 +12,9 @@ class PartyPageView extends StatefulWidget {
   final PartyPageState partyPageState;
   final String playlistName;
   final QueueList<PlaylistQueueItem> queue;
-  SpotifyPlayer spotifyPlayer;
+  final JashanUser user;
 
-  PartyPageView(this.partyPageState, this.playlistName, this.queue) {
-    spotifyPlayer = new SpotifyPlayer(
-      user: partyPageState.widget.user,
-    );
-  }
+  PartyPageView(this.user, this.partyPageState, this.playlistName, this.queue);
 
   @override
   State<StatefulWidget> createState() {
@@ -25,14 +24,18 @@ class PartyPageView extends StatefulWidget {
 
 class _PartyPageViewState extends State<PartyPageView> {
   PlaylistQueueItem currentlyPlayingSong;
+  SpotifyPlayer spotifyPlayer;
 
   @override
   void initState() {
     super.initState();
-    widget.spotifyPlayer.setOnSongChange(() {
+    spotifyPlayer = new SpotifyPlayer(
+      user: widget.user,
+    );
+    spotifyPlayer.setOnSongChange(() {
       setState(() {
         currentlyPlayingSong = widget.queue.removeFirst();
-        widget.spotifyPlayer.playSong(currentlyPlayingSong);
+        spotifyPlayer.playSong(currentlyPlayingSong);
       });
     });
   }
@@ -72,21 +75,13 @@ class _PartyPageViewState extends State<PartyPageView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Flexible(
-                        child: Text(
-                          widget.playlistName,
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    "${widget.playlistName.substring(0, min(widget.playlistName.length, 16))}${widget.playlistName.length > 16 ? "..." : ""}",
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
                   Divider(color: Colors.black),
                 ],
@@ -107,14 +102,22 @@ class _PartyPageViewState extends State<PartyPageView> {
                         }
                         return PlaylistQueueItemCard(
                           data: data,
-                          onUpvoteChange:
-                              index != 0 || currentlyPlayingSong == null
-                                  ? () {
-                                      setState(() {
-                                        widget.queue.sort();
-                                      });
-                                    }
-                                  : () {},
+                          onUpvoteChange: index != 0 ||
+                                  currentlyPlayingSong == null
+                              ? (increase) {
+                                  Set<JashanUser> variation =
+                                      increase ? data.upvotes : data.downvotes;
+                                  Set<JashanUser> otherVariation =
+                                      increase ? data.downvotes : data.upvotes;
+                                  otherVariation.remove(widget.user);
+                                  variation.contains(widget.user)
+                                      ? variation.remove(widget.user)
+                                      : variation.add(widget.user);
+                                  setState(() {
+                                    widget.queue.sort();
+                                  });
+                                }
+                              : (increase) {},
                           isCurrentPlaying: data == currentlyPlayingSong,
                         );
                       },
@@ -150,7 +153,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                       onPressed: () {
                         setState(() {
                           currentlyPlayingSong = widget.queue.removeFirst();
-                          widget.spotifyPlayer.playSong(currentlyPlayingSong);
+                          spotifyPlayer.playSong(currentlyPlayingSong);
                         });
                       },
                     ),
@@ -167,6 +170,6 @@ class _PartyPageViewState extends State<PartyPageView> {
   @override
   void dispose() {
     super.dispose();
-    widget.spotifyPlayer.dispose();
+    spotifyPlayer.dispose();
   }
 }
