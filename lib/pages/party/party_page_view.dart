@@ -6,7 +6,7 @@ import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/spotify_player.dart';
 import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/playlist_queue_item_card.dart';
-import 'package:jashan/widgets/reputations_view.dart';
+import 'package:jashan/widgets/track_info_view.dart';
 
 class PartyPageView extends StatefulWidget {
   final PartyPageState partyPageState;
@@ -109,7 +109,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   backgroundColor: background,
-                                  content: ReputationsView(appBar, data),
+                                  content: TrackInfoView(appBar, data),
                                 );
                               },
                             );

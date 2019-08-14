@@ -16,7 +16,7 @@ class PartyPage extends StatefulWidget {
 
   PartyPage(this.playlistName, this.user, List<PlaylistItem> playlistItems) {
     playlistItems.forEach((item) {
-      var playlistQueueItem = new PlaylistQueueItem.fromPlaylistItem(item);
+      var playlistQueueItem = new PlaylistQueueItem.fromPlaylistItem(item, addedBy: user.username);
       playlistQueueItem.upvotes.add(user);
       queue.add(playlistQueueItem);
     });

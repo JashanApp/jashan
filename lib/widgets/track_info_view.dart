@@ -1,24 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/util/text_utilities.dart';
 
-class ReputationsView extends StatelessWidget {
+class TrackInfoView extends StatelessWidget {
   final PlaylistQueueItem data;
   final AppBar appBar;
 
-  ReputationsView(this.appBar, this.data);
+  TrackInfoView(this.appBar, this.data);
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height -
+    final double height = MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
-        MediaQuery
-            .of(context)
-            .padding
-            .top -
+        MediaQuery.of(context).padding.top -
         kToolbarHeight;
     String upvotes = "";
     if (data.upvotes.isNotEmpty) {
@@ -35,18 +30,25 @@ class ReputationsView extends StatelessWidget {
       downvotes = downvotes.substring(0, downvotes.length - 2);
     }
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       height: height,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Reputations",
+            "${getTextWithCap(data.title, 21)}",
             style: TextStyle(
               fontSize: 20,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2.5),
+            child: Text(
+              "Added by: ${data.addedBy}",
+              style: TextStyle(
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
           Divider(
@@ -54,18 +56,20 @@ class ReputationsView extends StatelessWidget {
           ),
           data.upvotes.length != 0
               ? _ReputationDescriptionWidget(
-            "upvotes",
-            Icons.keyboard_arrow_up,
-            amount: data.upvotes.length,
-            who: upvotes,
-          ) : Container(),
+                  "upvotes",
+                  Icons.keyboard_arrow_up,
+                  amount: data.upvotes.length,
+                  who: upvotes,
+                )
+              : Container(),
           data.downvotes.length != 0
               ? _ReputationDescriptionWidget(
-            "downvotes",
-            Icons.keyboard_arrow_down,
-            amount: data.downvotes.length,
-            who: downvotes,
-          ) : Container(),
+                  "downvotes",
+                  Icons.keyboard_arrow_down,
+                  amount: data.downvotes.length,
+                  who: downvotes,
+                )
+              : Container(),
         ],
       ),
     );
