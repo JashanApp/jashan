@@ -4,10 +4,10 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/data/playlist_item.dart';
-import 'package:jashan/widgets/playlist_item_card.dart';
 import 'package:jashan/data/user.dart';
+import 'package:jashan/pages/party/party_page.dart';
+import 'package:jashan/widgets/playlist_item_card.dart';
 
 class StartPartyPage extends StatefulWidget {
   final JashanUser user;
@@ -49,187 +49,192 @@ class _StartPartyPageState extends State<StartPartyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        title: Text('Start Party'),
-        backgroundColor: Colors.orange,
+    AppBar appBar = AppBar(
+      iconTheme: IconThemeData(
+        color: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<String>(
-                      value: _dropdownValue,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          _dropdownValue = newValue;
-                          if (_dropdownValue ==
-                              _StartPartyPageState.defaultDropboxText) {
-                            _selectedText = _createTextController.text;
-                            _playlistItems.clear();
-                          } else {
-                            _selectedText = newValue;
-                            _populatePlaylistSongs();
-                          }
-                        });
-                      },
-                      items: _idForPlaylist.keys.map<DropdownMenuItem<String>>(
-                        (String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Center(
-                child: Text(
-                  'or',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w100,
-                    color: Colors.black,
-                    fontSize: 28,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
-                onChanged: (playlistName) {
-                  if (_dropdownValue ==
-                      _StartPartyPageState.defaultDropboxText) {
-                    setState(() {
-                      _playlistItems.clear();
-                      _selectedText = playlistName;
-                    });
-                  }
-                },
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-                controller: _createTextController,
-                decoration: InputDecoration(
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  border: OutlineInputBorder(),
-                  hintText: 'Create New Playlist Name',
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Divider(),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Flexible(
-                    child: Text(
-                      _selectedText,
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
+      title: Text('Start Party'),
+      backgroundColor: Colors.orange,
+    );
+
+    double height = MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top - kToolbarHeight;
+    return Scaffold(
+      appBar: appBar,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: height * 0.3,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
                         width: double.infinity,
-                        height: 200,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(color: Colors.black54),
                         ),
-                        child: _playlistItems.isNotEmpty
-                            ? ListView.builder(
-                                itemBuilder: (BuildContext context, int index) {
-                                  return PlaylistItemCard(
-                                    data: _playlistItems[index],
+                        child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              value: _dropdownValue,
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  _dropdownValue = newValue;
+                                  if (_dropdownValue ==
+                                      _StartPartyPageState.defaultDropboxText) {
+                                    _selectedText = _createTextController.text;
+                                    _playlistItems.clear();
+                                  } else {
+                                    _selectedText = newValue;
+                                    _populatePlaylistSongs();
+                                  }
+                                });
+                              },
+                              items: _idForPlaylist.keys
+                                  .map<DropdownMenuItem<String>>(
+                                (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   );
                                 },
-                                itemCount: _playlistItems.length,
-                              )
-                            : Center(
-                                child: Text(
-                                  'No songs!',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 65,
-                        child: RaisedButton(
-                          child: Text(
-                            "Create Party!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
+                              ).toList(),
                             ),
                           ),
-                          color: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(75),
-                          ),
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PartyPage(_selectedText, widget.user, _playlistItems),
-                              ),
-                            );
-                          },
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
+                      Center(
+                        child: Text(
+                          'or',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w100,
+                            color: Colors.black,
+                            fontSize: 28,
+                          ),
+                        ),
+                      ),
+                      TextField(
+                        onChanged: (playlistName) {
+                          if (_dropdownValue ==
+                              _StartPartyPageState.defaultDropboxText) {
+                            setState(() {
+                              _playlistItems.clear();
+                              _selectedText = playlistName;
+                            });
+                          }
+                        },
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        controller: _createTextController,
+                        decoration: InputDecoration(
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          border: OutlineInputBorder(),
+                          hintText: 'Create New Playlist Name',
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.black,
                       ),
                     ],
                   ),
                 ),
-              )
-            ],
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: height * 0.1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          _selectedText,
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: height * 0.65,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          width: double.infinity,
+                        height: height * 0.45,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: _playlistItems.isNotEmpty
+                              ? ListView.builder(
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return PlaylistItemCard(
+                                      data: _playlistItems[index],
+                                    );
+                                  },
+                                  itemCount: _playlistItems.length,
+                                )
+                              : Center(
+                                  child: Text(
+                                    'No songs!',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 65,
+                          child: RaisedButton(
+                            child: Text(
+                              "Create Party!",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                              ),
+                            ),
+                            color: Colors.orange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(75),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PartyPage(
+                                      _selectedText,
+                                      widget.user,
+                                      _playlistItems),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
