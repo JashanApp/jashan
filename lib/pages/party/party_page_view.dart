@@ -5,8 +5,8 @@ import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/spotify_player.dart';
 import 'package:jashan/util/text_utilities.dart';
-import 'package:jashan/widgets/track_queue_item_card.dart';
 import 'package:jashan/widgets/track_info_view.dart';
+import 'package:jashan/widgets/track_queue_item_card.dart';
 
 class PartyPageView extends StatefulWidget {
   final PartyPageState partyPageState;

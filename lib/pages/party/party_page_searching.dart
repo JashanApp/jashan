@@ -82,8 +82,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             data: data,
             onClick: () {
               final TrackQueueItem queueItem =
-                  TrackQueueItem.fromTrack(data,
-                      addedBy: widget.user.username);
+                  TrackQueueItem.fromTrack(data, addedBy: widget.user.username);
               widget.queue.add(queueItem);
             },
           );

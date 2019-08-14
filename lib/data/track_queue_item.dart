@@ -11,12 +11,12 @@ class TrackQueueItem extends Track implements Comparable {
 
   TrackQueueItem.fromTrack(Track track, {@required this.addedBy})
       : super(
-      thumbnail: track.thumbnail,
-      thumbnailUrl: track.thumbnailUrl,
-      title: track.title,
-      artist: track.artist,
-      uri: track.uri,
-      durationMs: track.durationMs);
+            thumbnail: track.thumbnail,
+            thumbnailUrl: track.thumbnailUrl,
+            title: track.title,
+            artist: track.artist,
+            uri: track.uri,
+            durationMs: track.durationMs);
 
   int getValue() {
     return upvotes.length - downvotes.length;

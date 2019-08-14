@@ -95,7 +95,8 @@ class LogInPageState extends State<LogInPage> {
                   Row(
                     children: <Widget>[
                       Checkbox(
-                        onChanged: (bool value) => setState(() => _rememberMe = !_rememberMe),
+                        onChanged: (bool value) =>
+                            setState(() => _rememberMe = !_rememberMe),
                         value: _rememberMe,
                       ),
                       Text('Remember me'),
@@ -326,8 +327,8 @@ class LogInPageState extends State<LogInPage> {
           }
           jashanUser = JashanUser(username: username);
           if (_rememberMe) {
-            final SharedPreferences prefs = await SharedPreferences
-                .getInstance();
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
             prefs.setString('email', userProfile['email']);
             prefs.setString('password', defaultSpotifyPassword);
             /* todo fix the above code from the fact that it will not work when

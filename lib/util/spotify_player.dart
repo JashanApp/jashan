@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:adhara_socket_io/adhara_socket_io.dart';
-import 'package:collection/collection.dart';
-import 'package:http/http.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
 
@@ -21,7 +18,7 @@ class SpotifyPlayer {
 
   void initSocket() async {
     socket = await manager.createInstance(SocketOptions(
-        'https://spotify-connect-ws.herokuapp.com/connect', // todo host our own
+      'https://spotify-connect-ws.herokuapp.com/connect', // todo host our own
     ));
     socket.on("track_end", (message) {
       timer = new Timer(Duration(seconds: 1), () {
@@ -48,7 +45,9 @@ class SpotifyPlayer {
       print('reconnect failed');
     });
     socket.onConnect((data) {
-      socket.emit('initiate', [ { "accessToken": '${user.accessToken}' } ]);
+      socket.emit('initiate', [
+        {"accessToken": '${user.accessToken}'}
+      ]);
       print('initiated');
     });
     socket.onDisconnect((data) {
@@ -64,7 +63,11 @@ class SpotifyPlayer {
   }
 
   void playSong(Track song) {
-    socket.emit('play', [ { 'uris': ['${song.uri}'] } ]);
+    socket.emit('play', [
+      {
+        'uris': ['${song.uri}']
+      }
+    ]);
   }
 
   void dispose() async {

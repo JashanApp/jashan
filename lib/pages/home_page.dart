@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/pages/settings_page.dart';
-import 'package:jashan/pages/create_party_page.dart';
 import 'package:jashan/data/user.dart';
+import 'package:jashan/pages/create_party_page.dart';
+import 'package:jashan/pages/settings_page.dart';
 
 class HomePage extends StatelessWidget {
   final JashanUser user;

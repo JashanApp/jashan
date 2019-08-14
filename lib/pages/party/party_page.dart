@@ -16,7 +16,8 @@ class PartyPage extends StatefulWidget {
 
   PartyPage(this.playlistName, this.user, List<Track> tracks) {
     tracks.forEach((item) {
-      var trackQueueItem = new TrackQueueItem.fromTrack(item, addedBy: user.username);
+      var trackQueueItem =
+          new TrackQueueItem.fromTrack(item, addedBy: user.username);
       trackQueueItem.upvotes.add(user);
       queue.add(trackQueueItem);
     });

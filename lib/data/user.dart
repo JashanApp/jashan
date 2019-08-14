@@ -10,15 +10,13 @@ class JashanUser {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is JashanUser &&
-              runtimeType == other.runtimeType &&
-              username == other.username &&
-              spotifyUserId == other.spotifyUserId &&
-              accessToken == other.accessToken;
+      other is JashanUser &&
+          runtimeType == other.runtimeType &&
+          username == other.username &&
+          spotifyUserId == other.spotifyUserId &&
+          accessToken == other.accessToken;
 
   @override
   int get hashCode =>
-      username.hashCode ^
-      spotifyUserId.hashCode ^
-      accessToken.hashCode;
+      username.hashCode ^ spotifyUserId.hashCode ^ accessToken.hashCode;
 }

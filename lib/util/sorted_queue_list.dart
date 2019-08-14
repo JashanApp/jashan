@@ -7,7 +7,8 @@ class SortedQueueList<E> extends QueueList<E> {
     sort();
   }
 
-  @override E removeFirst() {
+  @override
+  E removeFirst() {
     E result = super.removeFirst();
     sort();
     return result;

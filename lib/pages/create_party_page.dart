@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,10 @@ class _StartPartyPageState extends State<StartPartyPage> {
       title: Text('Start Party'),
       backgroundColor: Colors.orange,
     );
-    double height = MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top - kToolbarHeight;
+    double height = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top -
+        kToolbarHeight;
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
@@ -185,8 +187,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         ),
                         child: _tracks.isNotEmpty
                             ? ListView.builder(
-                                itemBuilder:
-                                    (BuildContext context, int index) {
+                                itemBuilder: (BuildContext context, int index) {
                                   return TrackCard(
                                     data: _tracks[index],
                                   );
@@ -220,9 +221,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PartyPage(
-                                    _selectedText,
-                                    widget.user,
-                                    _tracks),
+                                    _selectedText, widget.user, _tracks),
                               ),
                             );
                           },

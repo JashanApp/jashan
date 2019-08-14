@@ -14,7 +14,10 @@ class FrontPageViewer extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color.fromRGBO(255, 117, 0, 1), Color.fromRGBO(224, 178, 132, 1)],
+            colors: [
+              Color.fromRGBO(255, 117, 0, 1),
+              Color.fromRGBO(224, 178, 132, 1)
+            ],
           ),
         ),
         child: frontPage,
@@ -23,5 +26,4 @@ class FrontPageViewer extends StatelessWidget {
   }
 }
 
-abstract class FrontPage extends StatefulWidget {
-}
+abstract class FrontPage extends StatefulWidget {}
