@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:jashan/data/playlist_item.dart';
-import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/data/track.dart';
+import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/text_utilities.dart';
-import 'package:jashan/widgets/playlist_item_card.dart';
+import 'package:jashan/widgets/track_card.dart';
 
 class PartyPageSearching extends StatefulWidget {
   final PartyPageState partyPageState;
   final JashanUser user;
-  final QueueList<PlaylistQueueItem> queue;
+  final QueueList<TrackQueueItem> queue;
 
   PartyPageSearching(this.partyPageState, this.user, this.queue);
 
@@ -24,7 +24,7 @@ class PartyPageSearching extends StatefulWidget {
 }
 
 class _PartyPageSearchingState extends State<PartyPageSearching> {
-  List<PlaylistItem> _searchItems = List<PlaylistItem>();
+  List<Track> _searchItems = List<Track>();
   TextEditingController _searchQueryController = TextEditingController();
 
   @override
@@ -77,12 +77,12 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
               height: 10,
             );
           }
-          final PlaylistItem data = _searchItems[index - 1];
-          return PlaylistItemCard(
+          final Track data = _searchItems[index - 1];
+          return TrackCard(
             data: data,
             onClick: () {
-              final PlaylistQueueItem queueItem =
-                  PlaylistQueueItem.fromPlaylistItem(data,
+              final TrackQueueItem queueItem =
+                  TrackQueueItem.fromTrack(data,
                       addedBy: widget.user.username);
               widget.queue.add(queueItem);
             },
@@ -111,7 +111,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         }
         artistsString = getTextWithCap(artistsString, 37);
         _searchItems.add(
-          PlaylistItem(
+          Track(
               thumbnail: Image.network(imageUrl),
               thumbnailUrl: imageUrl,
               title: name,

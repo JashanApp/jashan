@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:adhara_socket_io/adhara_socket_io.dart';
 import 'package:collection/collection.dart';
 import 'package:http/http.dart';
-import 'package:jashan/data/playlist_item.dart';
+import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
 
 class SpotifyPlayer {
@@ -63,7 +63,7 @@ class SpotifyPlayer {
     this.onSongChange = onSongChange;
   }
 
-  void playSong(PlaylistItem song) {
+  void playSong(Track song) {
     socket.emit('play', [ { 'uris': ['${song.uri}'] } ]);
   }
 

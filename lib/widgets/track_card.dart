@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:jashan/data/playlist_item.dart';
+import 'package:jashan/data/track.dart';
 
-class PlaylistItemCard extends StatelessWidget {
-  final PlaylistItem data;
+class TrackCard extends StatelessWidget {
+  final Track data;
   final GestureTapCallback onClick;
 
-  PlaylistItemCard({@required this.data, this.onClick});
+  TrackCard({@required this.data, this.onClick});
 
   @override
   Widget build(BuildContext context) {

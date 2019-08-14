@@ -1,17 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/spotify_player.dart';
 import 'package:jashan/util/text_utilities.dart';
-import 'package:jashan/widgets/playlist_queue_item_card.dart';
+import 'package:jashan/widgets/track_queue_item_card.dart';
 import 'package:jashan/widgets/track_info_view.dart';
 
 class PartyPageView extends StatefulWidget {
   final PartyPageState partyPageState;
   final String playlistName;
-  final QueueList<PlaylistQueueItem> queue;
+  final QueueList<TrackQueueItem> queue;
   final JashanUser user;
 
   PartyPageView(this.user, this.partyPageState, this.playlistName, this.queue);
@@ -23,7 +23,7 @@ class PartyPageView extends StatefulWidget {
 }
 
 class _PartyPageViewState extends State<PartyPageView> {
-  PlaylistQueueItem currentlyPlayingSong;
+  TrackQueueItem currentlyPlayingSong;
   SpotifyPlayer spotifyPlayer;
 
   @override
@@ -92,7 +92,7 @@ class _PartyPageViewState extends State<PartyPageView> {
               child: widget.queue.isNotEmpty
                   ? ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
-                        PlaylistQueueItem data;
+                        TrackQueueItem data;
                         if (currentlyPlayingSong == null) {
                           data = widget.queue[index];
                         } else if (index == 0 && currentlyPlayingSong != null) {
@@ -100,7 +100,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                         } else if (index != 0 && currentlyPlayingSong != null) {
                           data = widget.queue[index - 1];
                         }
-                        return PlaylistQueueItemCard(
+                        return TrackQueueItemCard(
                           data: data,
                           onLongPress: () {
                             Color background = Colors.black.withOpacity(0.7);

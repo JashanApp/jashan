@@ -4,11 +4,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:jashan/data/playlist_item.dart';
+import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/text_utilities.dart';
-import 'package:jashan/widgets/playlist_item_card.dart';
+import 'package:jashan/widgets/track_card.dart';
 
 class StartPartyPage extends StatefulWidget {
   final JashanUser user;
@@ -29,7 +29,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
 
   final TextEditingController _createTextController = TextEditingController();
   final Map<String, String> _idForPlaylist = new Map<String, String>();
-  final List<PlaylistItem> _playlistItems = List<PlaylistItem>();
+  final List<Track> _tracks = List<Track>();
 
   @override
   void initState() {
@@ -87,7 +87,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                                 if (_dropdownValue ==
                                     _StartPartyPageState.defaultDropboxText) {
                                   _selectedText = _createTextController.text;
-                                  _playlistItems.clear();
+                                  _tracks.clear();
                                 } else {
                                   _selectedText = newValue;
                                   _populatePlaylistSongs();
@@ -127,7 +127,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         if (_dropdownValue ==
                             _StartPartyPageState.defaultDropboxText) {
                           setState(() {
-                            _playlistItems.clear();
+                            _tracks.clear();
                             _selectedText = playlistName;
                           });
                         }
@@ -183,15 +183,15 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
                         ),
-                        child: _playlistItems.isNotEmpty
+                        child: _tracks.isNotEmpty
                             ? ListView.builder(
                                 itemBuilder:
                                     (BuildContext context, int index) {
-                                  return PlaylistItemCard(
-                                    data: _playlistItems[index],
+                                  return TrackCard(
+                                    data: _tracks[index],
                                   );
                                 },
-                                itemCount: _playlistItems.length,
+                                itemCount: _tracks.length,
                               )
                             : Center(
                                 child: Text(
@@ -222,7 +222,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                                 builder: (context) => PartyPage(
                                     _selectedText,
                                     widget.user,
-                                    _playlistItems),
+                                    _tracks),
                               ),
                             );
                           },
@@ -244,7 +244,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
             headers: {'Authorization': 'Bearer ${widget.user.accessToken}'})
         .then((response) {
       setState(() {
-        _playlistItems.clear();
+        _tracks.clear();
         List tracks = json.decode(response.body)['items'];
         tracks.forEach((track) {
           Map trackInfo = track['track'];
@@ -259,8 +259,8 @@ class _StartPartyPageState extends State<StartPartyPage> {
             artistsString += ', ${artists[i]['name']}';
           }
           artistsString = getTextWithCap(artistsString, 35);
-          _playlistItems.add(
-            PlaylistItem(
+          _tracks.add(
+            Track(
               thumbnail: Image.network(imageUrl),
               thumbnailUrl: imageUrl,
               title: name,

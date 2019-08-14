@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/util/text_utilities.dart';
 
-class PlaylistQueueItemCard extends StatelessWidget {
-  final PlaylistQueueItem data;
+class TrackQueueItemCard extends StatelessWidget {
+  final TrackQueueItem data;
   final Function(bool) onUpvoteChange;
   final bool isCurrentPlaying;
   final GestureLongPressCallback onLongPress;
 
-  PlaylistQueueItemCard(
+  TrackQueueItemCard(
       {@required this.data,
       this.onUpvoteChange,
       this.onLongPress,

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/util/text_utilities.dart';
 
 class TrackInfoView extends StatelessWidget {
-  final PlaylistQueueItem data;
+  final TrackQueueItem data;
   final AppBar appBar;
 
   TrackInfoView(this.appBar, this.data);
