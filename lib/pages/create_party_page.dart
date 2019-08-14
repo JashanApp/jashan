@@ -56,7 +56,6 @@ class _StartPartyPageState extends State<StartPartyPage> {
       title: Text('Start Party'),
       backgroundColor: Colors.orange,
     );
-
     double height = MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top - kToolbarHeight;
     return Scaffold(
       appBar: appBar,

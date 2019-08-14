@@ -39,34 +39,35 @@ class _PartyPageViewState extends State<PartyPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        actions: <Widget>[
-          InkWell(
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onTap: () {
-              widget.partyPageState.setState(() {
-                widget.partyPageState.searching = true;
-              });
-            },
-          ),
-          SizedBox(
-            width: 20,
-          ),
-        ],
+    AppBar appBar = AppBar(
+      iconTheme: IconThemeData(
+        color: Colors.white,
       ),
+      actions: <Widget>[
+        InkWell(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onTap: () {
+            widget.partyPageState.setState(() {
+              widget.partyPageState.searching = true;
+            });
+          },
+        ),
+        SizedBox(
+          width: 20,
+        ),
+      ],
+    );
+    return Scaffold(
+      appBar: appBar,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
+            /*SizedBox(
               height: 10,
             ),
             Row(
@@ -88,7 +89,7 @@ class _PartyPageViewState extends State<PartyPageView> {
             Divider(color: Colors.black),
             Container(
               height: 435,
-              /* todo make this dynamic by using screen height */
+              */ /* todo make this dynamic by using screen height */ /*
               child: widget.queue.isNotEmpty
                   ? ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
@@ -119,35 +120,97 @@ class _PartyPageViewState extends State<PartyPageView> {
                       ),
                     ),
             ),
-            SizedBox(
-              height: 15,
+            */
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          widget.playlistName,
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                ],
+              ),
             ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 200,
-                  height: 50,
-                  child: RaisedButton(
-                    child: Text(
-                      "Start Party",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+            Expanded(
+              flex: 8,
+              child: widget.queue.isNotEmpty
+                  ? ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        PlaylistQueueItem data;
+                        if (currentlyPlayingSong == null) {
+                          data = widget.queue[index];
+                        } else if (index == 0 && currentlyPlayingSong != null) {
+                          data = currentlyPlayingSong;
+                        } else if (index != 0 && currentlyPlayingSong != null) {
+                          data = widget.queue[index - 1];
+                        }
+                        return PlaylistQueueItemCard(
+                          data: data,
+                          onUpvoteChange:
+                              index != 0 || currentlyPlayingSong == null
+                                  ? () {
+                                      setState(() {
+                                        widget.queue.sort();
+                                      });
+                                    }
+                                  : () {},
+                          isCurrentPlaying: data == currentlyPlayingSong,
+                        );
+                      },
+                      itemCount: widget.queue.length +
+                          (currentlyPlayingSong == null ? 0 : 1),
+                    )
+                  : Center(
+                      child: Text(
+                        'No songs!',
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
-                    color: Colors.orange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(75),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2 - 12.5,
+                    height: 50,
+                    child: RaisedButton(
+                      child: Text(
+                        "Start Party",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                      color: Colors.orange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(75),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          currentlyPlayingSong = widget.queue.removeFirst();
+                          widget.spotifyPlayer.playSong(currentlyPlayingSong);
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        currentlyPlayingSong = widget.queue.removeFirst();
-                        widget.spotifyPlayer.playSong(currentlyPlayingSong);
-                      });
-                    },
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             )
           ],
         ),
