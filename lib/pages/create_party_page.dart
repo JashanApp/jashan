@@ -251,7 +251,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
           String name = trackInfo['name'];
           int durationMs = trackInfo['duration_ms'];
           String uri = trackInfo['uri'];
-          const int CAP = 35;
+          const int CAP = 32;
           name =
               '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
           List artists = trackInfo['artists'];

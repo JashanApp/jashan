@@ -102,7 +102,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         String uri = result['uri'];
         String name = result['name'];
         int durationMs = result['duration_ms'];
-        const int CAP = 37;
+        const int CAP = 34;
         name =
         '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
         List artists = result['artists'];
