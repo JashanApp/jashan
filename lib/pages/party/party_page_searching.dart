@@ -31,10 +31,8 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.orange,
+        iconTheme: Theme.of(context).iconTheme,
+        backgroundColor: Theme.of(context).primaryColor,
         title: TextField(
           autocorrect: false,
           controller: _searchQueryController,
@@ -45,19 +43,18 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             }
           },
           style: TextStyle(
-            color: Colors.white,
+            color: Theme.of(context).accentColor,
           ),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 14.0),
-            prefixIcon: Icon(Icons.search, color: Colors.white),
+            prefixIcon: Icon(Icons.search),
             hintText: "Search...",
-            hintStyle: TextStyle(color: Colors.white),
+            hintStyle: TextStyle(color: Theme.of(context).accentColor),
           ),
         ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.close),
-            color: Colors.white,
             onPressed: () {
               widget.partyPageState.setState(() {
                 widget.partyPageState.searching = false;

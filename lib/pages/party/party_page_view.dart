@@ -43,15 +43,10 @@ class _PartyPageViewState extends State<PartyPageView> {
   @override
   Widget build(BuildContext context) {
     AppBar appBar = AppBar(
-      iconTheme: IconThemeData(
-        color: Colors.white,
-      ),
+      iconTheme: Theme.of(context).iconTheme,
       actions: <Widget>[
         InkWell(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
+          child: Icon(Icons.add),
           onTap: () {
             widget.partyPageState.setState(() {
               widget.partyPageState.searching = true;
@@ -78,7 +73,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                   Text(
                     getTextWithCap(widget.playlistName, 16),
                     style: TextStyle(
-                      color: Colors.orange,
+                      color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
                     ),
@@ -154,7 +149,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                       child: Text(
                         "Start Party",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                           fontSize: 20,
                         ),
                       ),

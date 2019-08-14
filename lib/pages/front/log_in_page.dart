@@ -52,9 +52,9 @@ class LogInPageState extends State<LogInPage> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.person_outline,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Username',
                       ),
@@ -74,9 +74,9 @@ class LogInPageState extends State<LogInPage> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.lock_outline,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Password',
                       ),
@@ -98,6 +98,7 @@ class LogInPageState extends State<LogInPage> {
                         onChanged: (bool value) =>
                             setState(() => _rememberMe = !_rememberMe),
                         value: _rememberMe,
+                        activeColor: Colors.black,
                       ),
                       Text('Remember me'),
                     ],
@@ -121,11 +122,11 @@ class LogInPageState extends State<LogInPage> {
                 child: Text(
                   "LOG IN",
                   style: TextStyle(
-                    color: Colors.orange,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                color: Colors.white,
+                color: Theme.of(context).accentColor,
                 onPressed: () {
                   _logIn(context);
                 },
@@ -143,7 +144,7 @@ class LogInPageState extends State<LogInPage> {
                 child: Text(
                   "LOG IN WITH SPOTIFY",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

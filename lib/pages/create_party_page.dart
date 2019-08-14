@@ -50,11 +50,9 @@ class _StartPartyPageState extends State<StartPartyPage> {
   @override
   Widget build(BuildContext context) {
     AppBar appBar = AppBar(
-      iconTheme: IconThemeData(
-        color: Colors.white,
-      ),
+      iconTheme: Theme.of(context).iconTheme,
       title: Text('Start Party'),
-      backgroundColor: Colors.orange,
+      backgroundColor: Theme.of(context).primaryColor,
     );
     double height = MediaQuery.of(context).size.height -
         appBar.preferredSize.height -
@@ -163,7 +161,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                       child: Text(
                         _selectedText,
                         style: TextStyle(
-                          color: Colors.orange,
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
                         ),
@@ -208,11 +206,11 @@ class _StartPartyPageState extends State<StartPartyPage> {
                           child: Text(
                             "Create Party!",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).accentColor,
                               fontSize: 28,
                             ),
                           ),
-                          color: Colors.orange,
+                          color: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(75),
                           ),

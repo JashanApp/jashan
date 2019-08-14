@@ -52,7 +52,7 @@ class TrackInfoView extends StatelessWidget {
             ),
           ),
           Divider(
-            color: Colors.white,
+            color: Theme.of(context).accentColor,
           ),
           data.upvotes.length != 0
               ? _ReputationDescriptionWidget(
@@ -93,7 +93,7 @@ class _ReputationDescriptionWidget extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: Colors.orange,
+            color: Theme.of(context).primaryColor,
             size: 36,
           ),
           SizedBox(
@@ -106,7 +106,7 @@ class _ReputationDescriptionWidget extends StatelessWidget {
                 "$amount reacted with $reputationType:",
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.white,
+                  color: Theme.of(context).accentColor,
                 ),
               ),
               Text(who),

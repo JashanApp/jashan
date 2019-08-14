@@ -39,7 +39,7 @@ class TrackQueueItemCard extends StatelessWidget {
                           child: Center(
                             child: Icon(
                               Icons.audiotrack,
-                              color: Colors.white,
+                              color: Theme.of(context).accentColor,
                               size: 24,
                             ),
                           ),
@@ -59,7 +59,7 @@ class TrackQueueItemCard extends StatelessWidget {
                   width: 120,
                   child: Text(
                     getTextWithCap(data.title, 7),
-                    style: TextStyle(fontSize: 22, color: Colors.orange),
+                    style: TextStyle(fontSize: 22, color: Theme.of(context).primaryColor),
                   ),
                 ),
               ],
@@ -69,7 +69,7 @@ class TrackQueueItemCard extends StatelessWidget {
               children: <Widget>[
                 Text(
                   "${data.getValue()}",
-                  style: TextStyle(fontSize: 22, color: Colors.orange),
+                  style: TextStyle(fontSize: 22, color: Theme.of(context).primaryColor),
                 ),
                 SizedBox(
                   width: 20,
@@ -78,7 +78,7 @@ class TrackQueueItemCard extends StatelessWidget {
                   iconSize: 24,
                   icon: Icon(
                     Icons.keyboard_arrow_up,
-                    color: Colors.orange,
+                    color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {
                     onUpvoteChange(true);
@@ -88,7 +88,7 @@ class TrackQueueItemCard extends StatelessWidget {
                   iconSize: 24,
                   icon: Icon(
                     Icons.keyboard_arrow_down,
-                    color: Colors.orange,
+                    color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () => onUpvoteChange(false),
                 ),

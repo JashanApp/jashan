@@ -61,9 +61,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.person_outline,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Username',
                       ),
@@ -84,9 +84,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.alternate_email,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Email',
                       ),
@@ -110,9 +110,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.lock_outline,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Password',
                       ),
@@ -137,9 +137,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.lock_outline,
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Confirm password',
                       ),
@@ -157,11 +157,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Text(
                   "SIGN UP",
                   style: TextStyle(
-                    color: Colors.orange,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                color: Colors.white,
+                color: Theme.of(context).accentColor,
                 onPressed: () {
                   _signUp(context);
                 },

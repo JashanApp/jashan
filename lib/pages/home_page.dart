@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                             },
                             child: Icon(
                               Icons.settings,
-                              color: Colors.white,
+                              color: Theme.of(context).accentColor,
                             ),
                           ),
                         ),
@@ -84,11 +84,11 @@ class HomePage extends StatelessWidget {
                         child: Text(
                           "HOST",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             fontSize: 28,
                           ),
                         ),
-                        color: Colors.orange,
+                        color: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(75),
                         ),
@@ -115,11 +115,11 @@ class HomePage extends StatelessWidget {
                         child: Text(
                           "CONNECT",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             fontSize: 28,
                           ),
                         ),
-                        color: Colors.orange,
+                        color: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(75),
                         ),
