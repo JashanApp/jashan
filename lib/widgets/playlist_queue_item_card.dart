@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
 import 'package:jashan/util/text_utilities.dart';
@@ -8,16 +7,18 @@ class PlaylistQueueItemCard extends StatelessWidget {
   final PlaylistQueueItem data;
   final Function(bool) onUpvoteChange;
   final bool isCurrentPlaying;
+  final GestureLongPressCallback onLongPress;
 
   PlaylistQueueItemCard(
-      {@required this.data, this.onUpvoteChange, this.isCurrentPlaying});
+      {@required this.data,
+      this.onUpvoteChange,
+      this.onLongPress,
+      this.isCurrentPlaying});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onLongPress: () {
-
-        },
+      onLongPress: onLongPress,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 3.0),
         child: Row(

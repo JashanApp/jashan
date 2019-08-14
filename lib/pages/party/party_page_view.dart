@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
@@ -8,6 +6,7 @@ import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/spotify_player.dart';
 import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/playlist_queue_item_card.dart';
+import 'package:jashan/widgets/reputations_view.dart';
 
 class PartyPageView extends StatefulWidget {
   final PartyPageState partyPageState;
@@ -103,6 +102,18 @@ class _PartyPageViewState extends State<PartyPageView> {
                         }
                         return PlaylistQueueItemCard(
                           data: data,
+                          onLongPress: () {
+                            Color background = Colors.black.withOpacity(0.7);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: background,
+                                  content: ReputationsView(appBar, data),
+                                );
+                              },
+                            );
+                          },
                           onUpvoteChange: index != 0 ||
                                   currentlyPlayingSong == null
                               ? (increase) {
