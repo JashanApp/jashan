@@ -48,6 +48,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             color: Colors.white,
           ),
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 14.0),
             prefixIcon: Icon(Icons.search, color: Colors.white),
             hintText: "Search...",
             hintStyle: TextStyle(color: Colors.white),
