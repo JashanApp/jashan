@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
+import 'package:jashan/util/text_utilities.dart';
 
 class PlaylistQueueItemCard extends StatelessWidget {
   final PlaylistQueueItem data;
@@ -56,7 +57,7 @@ class PlaylistQueueItemCard extends StatelessWidget {
                 Container(
                   width: 120,
                   child: Text(
-                    "${data.title.substring(0, min(data.title.length, 7))}${data.title.length > 7 ? "..." : ""}",
+                    getTextWithCap(data.title, 7),
                     style: TextStyle(fontSize: 22, color: Colors.orange),
                   ),
                 ),

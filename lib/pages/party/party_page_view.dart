@@ -6,6 +6,7 @@ import 'package:jashan/data/playlist_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/spotify_player.dart';
+import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/playlist_queue_item_card.dart';
 
 class PartyPageView extends StatefulWidget {
@@ -76,7 +77,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Text(
-                    "${widget.playlistName.substring(0, min(widget.playlistName.length, 16))}${widget.playlistName.length > 16 ? "..." : ""}",
+                    getTextWithCap(widget.playlistName, 16),
                     style: TextStyle(
                       color: Colors.orange,
                       fontWeight: FontWeight.bold,

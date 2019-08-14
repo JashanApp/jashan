@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:jashan/data/playlist_queue_item.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/data/playlist_item.dart';
+import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/playlist_item_card.dart';
 import 'package:jashan/data/user.dart';
 
@@ -102,16 +103,13 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         String uri = result['uri'];
         String name = result['name'];
         int durationMs = result['duration_ms'];
-        const int CAP = 34;
-        name =
-        '${name.substring(0, min(name.length, CAP))}${name.length > CAP ? '...' : ''}';
+        name = getTextWithCap(name, 34);
         List artists = result['artists'];
         String artistsString = artists[0]['name'];
         for (int i = 1; i < artists.length; i++) {
           artistsString += ', ${artists[i]['name']}';
         }
-        artistsString =
-        '${artistsString.substring(0, min(artistsString.length, CAP))}${artistsString.length > CAP ? '...' : ''}';
+        artistsString = getTextWithCap(artistsString, 37);
         _searchItems.add(
           PlaylistItem(
             thumbnail: Image.network(imageUrl),
