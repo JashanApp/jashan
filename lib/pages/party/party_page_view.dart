@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
@@ -157,12 +160,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(75),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          currentlyPlayingSong = widget.queue.removeFirst();
-                          spotifyPlayer.playSong(currentlyPlayingSong);
-                        });
-                      },
+                      onPressed: startParty,
                     ),
                   )
                 ],
@@ -178,5 +176,27 @@ class _PartyPageViewState extends State<PartyPageView> {
   void dispose() {
     super.dispose();
     spotifyPlayer.dispose();
+  }
+
+  void startParty() async {
+    Response availableDevicesResponse = await get(
+        'https://api.spotify.com/v1/me/player/devices',
+        headers: {'Authorization': 'Bearer ${widget.user.accessToken}'});
+    List availableDevices = json.decode(availableDevicesResponse.body)['devices'];
+    await put('https://api.spotify.com/v1/me/player',
+        headers: {
+          'Authorization': 'Bearer ${widget.user.accessToken}',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: '{'
+          '"device_ids": ['
+            '"${availableDevices[0]['id']}"'
+          ']'
+        '}');
+    setState(() {
+      currentlyPlayingSong = widget.queue.removeFirst();
+      spotifyPlayer.playSong(currentlyPlayingSong);
+    });
   }
 }
