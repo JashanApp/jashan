@@ -6,16 +6,14 @@ import 'package:http/http.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/data/user.dart';
-import 'package:jashan/pages/party/party_page.dart';
 import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/track_card.dart';
 
 class PartyPageSearching extends StatefulWidget {
-  final PartyPageState partyPageState;
   final JashanUser user;
   final QueueList<TrackQueueItem> queue;
 
-  PartyPageSearching(this.partyPageState, this.user, this.queue);
+  PartyPageSearching(this.user, this.queue);
 
   @override
   State<StatefulWidget> createState() {
@@ -31,7 +29,6 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
         iconTheme: Theme.of(context).iconTheme,
         backgroundColor: Theme.of(context).primaryColor,
         title: TextField(
@@ -52,17 +49,6 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             hintStyle: TextStyle(color: Theme.of(context).accentColor),
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {
-              widget.partyPageState.setState(() => widget.partyPageState.searching = false);
-            },
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.1,
-          ),
-        ],
       ),
       body: ListView.builder(
         itemCount: _searchItems.length + 1,
