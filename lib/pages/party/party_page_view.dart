@@ -112,22 +112,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                               },
                             );
                           },
-                          onUpvoteChange: index != 0 ||
-                                  currentlyPlayingSong == null
-                              ? (increase) {
-                                  Set<JashanUser> variation =
-                                      increase ? data.upvotes : data.downvotes;
-                                  Set<JashanUser> otherVariation =
-                                      increase ? data.downvotes : data.upvotes;
-                                  otherVariation.remove(widget.user);
-                                  variation.contains(widget.user)
-                                      ? variation.remove(widget.user)
-                                      : variation.add(widget.user);
-                                  setState(() {
-                                    widget.queue.sort();
-                                  });
-                                }
-                              : (increase) {},
+                          onUpvoteChange: (increase) => _onSongUpvote(index, data, increase),
                           isCurrentPlaying: data == currentlyPlayingSong,
                         );
                       },
@@ -160,7 +145,7 @@ class _PartyPageViewState extends State<PartyPageView> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(75),
                       ),
-                      onPressed: startParty,
+                      onPressed: _startParty,
                     ),
                   )
                 ],
@@ -172,13 +157,26 @@ class _PartyPageViewState extends State<PartyPageView> {
     );
   }
 
+  void _onSongUpvote(int songIndex, TrackQueueItem data, bool increase) {
+    if (songIndex != 0 || currentlyPlayingSong == null) {
+      Set<JashanUser> reputation = increase ? data.upvotes : data.downvotes;
+      Set<JashanUser> otherReputation = increase ? data.downvotes : data
+          .upvotes;
+      otherReputation.remove(widget.user);
+      reputation.contains(widget.user)
+          ? reputation.remove(widget.user)
+          : reputation.add(widget.user);
+      setState(() => widget.queue.sort());
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
     spotifyPlayer.dispose();
   }
 
-  void startParty() async {
+  void _startParty() async {
     Response availableDevicesResponse = await get(
         'https://api.spotify.com/v1/me/player/devices',
         headers: {'Authorization': 'Bearer ${widget.user.accessToken}'});

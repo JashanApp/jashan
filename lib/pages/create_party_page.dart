@@ -81,19 +81,8 @@ class _StartPartyPageState extends State<StartPartyPage> {
                           alignedDropdown: true,
                           child: DropdownButton<String>(
                             value: _dropdownValue,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                _dropdownValue = newValue;
-                                if (_dropdownValue ==
-                                    _StartPartyPageState.defaultDropboxText) {
-                                  _selectedText = _createTextController.text;
-                                  _tracks.clear();
-                                } else {
-                                  _selectedText = newValue;
-                                  _populatePlaylistSongs();
-                                }
-                              });
-                            },
+                            onChanged: (String newValue) =>
+                                _onNewPlaylist(newValue),
                             items: _idForPlaylist.keys
                                 .map<DropdownMenuItem<String>>(
                               (String value) {
@@ -126,10 +115,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                       onChanged: (playlistName) {
                         if (_dropdownValue ==
                             _StartPartyPageState.defaultDropboxText) {
-                          setState(() {
-                            _tracks.clear();
-                            _selectedText = playlistName;
-                          });
+                          _onChangedNewName(playlistName);
                         }
                       },
                       style: TextStyle(
@@ -214,15 +200,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(75),
                           ),
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PartyPage(
-                                    _selectedText, widget.user, _tracks),
-                              ),
-                            );
-                          },
+                          onPressed: () => _createParty(),
                         ),
                       ),
                     ],
@@ -234,6 +212,26 @@ class _StartPartyPageState extends State<StartPartyPage> {
         ),
       ),
     );
+  }
+
+  void _onNewPlaylist(String newPlaylistName) {
+    setState(() {
+      _dropdownValue = newPlaylistName;
+      if (_dropdownValue == _StartPartyPageState.defaultDropboxText) {
+        _selectedText = _createTextController.text;
+        _tracks.clear();
+      } else {
+        _selectedText = newPlaylistName;
+        _populatePlaylistSongs();
+      }
+    });
+  }
+
+  void _onChangedNewName(String newPlaylistName) {
+    setState(() {
+      _tracks.clear();
+      _selectedText = newPlaylistName;
+    });
   }
 
   void _populatePlaylistSongs() {
@@ -269,5 +267,15 @@ class _StartPartyPageState extends State<StartPartyPage> {
         });
       });
     });
+  }
+
+  void _createParty() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PartyPage(
+            _selectedText, widget.user, _tracks),
+      ),
+    );
   }
 }

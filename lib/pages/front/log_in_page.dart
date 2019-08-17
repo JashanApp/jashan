@@ -149,9 +149,7 @@ class LogInPageState extends State<LogInPage> {
                   ),
                 ),
                 color: Colors.green,
-                onPressed: () {
-                  _logInWithSpotify(context);
-                },
+                onPressed: () => _logInWithSpotify(context),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(75),
                 ),
@@ -164,17 +162,13 @@ class LogInPageState extends State<LogInPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 InkWell(
-                  onTap: () {
-                    _registerAccountButton(context);
-                  },
+                  onTap: () => _registerAccountButton(context),
                   child: Text(
                     'Don\'t have an account?',
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    _registerAccountButton(context);
-                  },
+                  onTap: () => _registerAccountButton(context),
                   child: Text(
                     ' SIGN UP',
                     style: TextStyle(

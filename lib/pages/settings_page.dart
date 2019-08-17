@@ -18,14 +18,8 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           InkWell(
-            onTap: () async {
-              final SharedPreferences prefs =
-                  await SharedPreferences.getInstance();
-              prefs.remove('username');
-              prefs.remove('email');
-              prefs.remove('password');
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/');
+            onTap: () {
+              _logOut(context);
             },
             child: ListTile(
               title: Text(
@@ -39,5 +33,15 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _logOut(BuildContext context) async {
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
+    prefs.remove('username');
+    prefs.remove('email');
+    prefs.remove('password');
+    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/');
   }
 }

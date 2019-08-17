@@ -48,14 +48,7 @@ class HomePage extends StatelessWidget {
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SettingsPage(user),
-                                ),
-                              );
-                            },
+                            onTap: () => _clickGear(context),
                             child: Icon(
                               Icons.settings,
                               color: Theme
@@ -118,7 +111,7 @@ class HomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(75),
                         ),
-                        onPressed: () => host(context),
+                        onPressed: () => _host(context),
                       ),
                     ),
                     SizedBox(
@@ -146,7 +139,7 @@ class HomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(75),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _connect(),
                       ),
                     ),
                   ],
@@ -159,7 +152,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void host(BuildContext context) async {
+  void _host(BuildContext context) async {
     if (user.accessToken != null) {
       Response availableDevicesResponse = await get(
           'https://api.spotify.com/v1/me/player/devices',
@@ -202,5 +195,18 @@ class HomePage extends StatelessWidget {
         ),
       );
     }
+  }
+
+  void _connect() {
+
+  }
+
+  void _clickGear(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SettingsPage(user),
+      ),
+    );
   }
 }

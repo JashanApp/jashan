@@ -56,9 +56,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           IconButton(
             icon: Icon(Icons.close),
             onPressed: () {
-              widget.partyPageState.setState(() {
-                widget.partyPageState.searching = false;
-              });
+              widget.partyPageState.setState(() => widget.partyPageState.searching = false);
             },
           ),
           SizedBox(
@@ -77,15 +75,16 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           final Track data = _searchItems[index - 1];
           return TrackCard(
             data: data,
-            onClick: () {
-              final TrackQueueItem queueItem =
-                  TrackQueueItem.fromTrack(data, addedBy: widget.user.username);
-              widget.queue.add(queueItem);
-            },
+            onClick: () => _addTrackToQueue(data),
           );
         },
       ),
     );
+  }
+
+  void _addTrackToQueue(Track track) {
+    final TrackQueueItem queueItem = TrackQueueItem.fromTrack(track, addedBy: widget.user.username);
+    widget.queue.add(queueItem);
   }
 
   Future _repopulateSearchList(String searchQuery) async {
