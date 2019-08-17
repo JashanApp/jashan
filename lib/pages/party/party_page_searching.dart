@@ -31,6 +31,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         iconTheme: Theme.of(context).iconTheme,
         backgroundColor: Theme.of(context).primaryColor,
         title: TextField(
@@ -46,7 +47,6 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             color: Theme.of(context).accentColor,
           ),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 14.0),
             prefixIcon: Icon(Icons.search, color: Theme.of(context).accentColor),
             hintText: "Search...",
             hintStyle: TextStyle(color: Theme.of(context).accentColor),
@@ -62,7 +62,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
             },
           ),
           SizedBox(
-            width: 20,
+            width: MediaQuery.of(context).size.width * 0.1,
           ),
         ],
       ),
