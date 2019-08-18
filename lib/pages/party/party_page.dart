@@ -111,11 +111,13 @@ class PartyPageState extends State<PartyPage> {
         }
       });
     });
-    widget.initialTracks.forEach((item) {
-      var trackQueueItem =
-          new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username);
-      _addSong(trackQueueItem);
-    });
+    if (widget.initialTracks != null) {
+      widget.initialTracks.forEach((item) {
+        var trackQueueItem =
+        new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username);
+        _addSong(trackQueueItem);
+      });
+    }
   }
 
   @override
@@ -123,6 +125,9 @@ class PartyPageState extends State<PartyPage> {
     AppBar appBar = AppBar(
       iconTheme: Theme.of(context).iconTheme,
       actions: <Widget>[
+        SizedBox(
+          width: 20,
+        ),
         InkWell(
           child: Icon(Icons.add),
           onTap: () => _openSearch(),
@@ -171,18 +176,7 @@ class PartyPageState extends State<PartyPage> {
                         }
                         return TrackQueueItemCard(
                           data: data,
-                          onLongPress: () {
-                            Color background = Colors.black.withOpacity(0.7);
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor: background,
-                                  content: TrackInfoView(appBar, data),
-                                );
-                              },
-                            );
-                          },
+                          onLongPress: () => _showTrackInfo(appBar, data),
                           onUpvoteChange: (increase) =>
                               _onSongUpvote(index, data, increase),
                           isCurrentPlaying: data == currentlyPlayingSong,
@@ -201,9 +195,10 @@ class PartyPageState extends State<PartyPage> {
             Expanded(
               flex: 1,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 2 - 12.5,
+                    width: MediaQuery.of(context).size.width / 2 - 30,
                     height: 50,
                     child: RaisedButton(
                       child: Text(
@@ -219,7 +214,25 @@ class PartyPageState extends State<PartyPage> {
                       ),
                       onPressed: _startParty,
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2 - 30,
+                    height: 50,
+                    child: RaisedButton(
+                      child: Text(
+                        "More Info",
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                          fontSize: 20,
+                        ),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(75),
+                      ),
+                      onPressed: _showInfo,
+                    ),
+                  ),
                 ],
               ),
             )
@@ -281,5 +294,41 @@ class PartyPageState extends State<PartyPage> {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
             PartyPageSearching(widget.owner, queue, _addSong)));
+  }
+
+  void _showInfo() {
+    Color background = Colors.black.withOpacity(0.7);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: background,
+          content: Container(
+            height: MediaQuery.of(context).size.height / 2,
+            child: Center(
+              child: Text(
+                "Party join ID: ${widget.id}",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTrackInfo(AppBar appBar, TrackQueueItem data) {
+    Color background = Colors.black.withOpacity(0.7);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: background,
+          content: TrackInfoView(appBar, data),
+        );
+      },
+    );
   }
 }

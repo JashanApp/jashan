@@ -278,6 +278,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
     document.setData({
       'owner_username': widget.user.username,
       'owner_access_token': widget.user.accessToken,
+      'party_name': _selectedText,
     });
     Navigator.pushReplacement(
       context,

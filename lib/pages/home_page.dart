@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:jashan/data/user.dart';
+import 'package:jashan/pages/connect_page.dart';
 import 'package:jashan/pages/create_party_page.dart';
 import 'package:jashan/pages/settings_page.dart';
 
@@ -139,7 +140,7 @@ class HomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(75),
                         ),
-                        onPressed: () => _connect(),
+                        onPressed: () => _connect(context),
                       ),
                     ),
                   ],
@@ -197,8 +198,13 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  void _connect() {
-
+  void _connect(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ConnectPage(user),
+      ),
+    );
   }
 
   void _clickGear(BuildContext context) {
