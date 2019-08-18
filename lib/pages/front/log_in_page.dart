@@ -334,7 +334,6 @@ class LogInPageState extends State<LogInPage> {
             prefs.setBool('spotify', true);
           }
           jashanUser.accessToken = token['access_token'];
-          jashanUser.spotifyUserId = userProfile['id'];
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

@@ -55,7 +55,7 @@ class TrackInfoView extends StatelessWidget {
             color: Theme.of(context).accentColor,
           ),
           data.upvotes.length != 0
-              ? _ReputationDescriptionWidget(
+              ? _VoteDescriptionWidget(
                   "upvotes",
                   Icons.keyboard_arrow_up,
                   amount: data.upvotes.length,
@@ -63,7 +63,7 @@ class TrackInfoView extends StatelessWidget {
                 )
               : Container(),
           data.downvotes.length != 0
-              ? _ReputationDescriptionWidget(
+              ? _VoteDescriptionWidget(
                   "downvotes",
                   Icons.keyboard_arrow_down,
                   amount: data.downvotes.length,
@@ -76,13 +76,13 @@ class TrackInfoView extends StatelessWidget {
   }
 }
 
-class _ReputationDescriptionWidget extends StatelessWidget {
+class _VoteDescriptionWidget extends StatelessWidget {
   final int amount;
   final String who;
-  final String reputationType;
+  final String voteType;
   final IconData icon;
 
-  _ReputationDescriptionWidget(this.reputationType, this.icon,
+  _VoteDescriptionWidget(this.voteType, this.icon,
       {this.amount, this.who});
 
   @override
@@ -103,7 +103,7 @@ class _ReputationDescriptionWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "$amount reacted with $reputationType:",
+                "$amount reacted with $voteType:",
                 style: TextStyle(
                   fontSize: 10,
                   color: Theme.of(context).accentColor,

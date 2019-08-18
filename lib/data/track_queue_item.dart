@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
@@ -7,7 +8,16 @@ import 'package:jashan/data/user.dart';
 class TrackQueueItem extends Track implements Comparable {
   final Set<JashanUser> upvotes = new HashSet();
   final Set<JashanUser> downvotes = new HashSet();
-  final String addedBy;
+  String addedBy;
+
+  TrackQueueItem.fromDocumentReference(DocumentSnapshot snapshot) :
+      super(thumbnailUrl: snapshot.data['thumbnail_url'],
+          title: snapshot.data['title'],
+          artist: snapshot.data['artist'],
+          uri: snapshot.data['uri'],
+          durationMs: snapshot.data['duration_ms']) {
+    addedBy = snapshot.data['added_by'];
+  }
 
   TrackQueueItem.fromTrack(Track track, {@required this.addedBy})
       : super(

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -269,13 +271,44 @@ class _StartPartyPageState extends State<StartPartyPage> {
     });
   }
 
-  void _createParty() {
+  void _createParty() async {
+    int partyId = await _createPartyId();
+    var document =
+        Firestore.instance.collection('parties').document('$partyId');
+    document.setData({
+      'owner_username': widget.user.username,
+      'owner_access_token': widget.user.accessToken,
+    });
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => PartyPage(
-            _selectedText, widget.user, _tracks),
+              id: partyId,
+              name: _selectedText,
+              owner: widget.user,
+              user: widget.user,
+              initialTracks: _tracks,
+            ),
       ),
     );
+  }
+
+  Future<int> _createPartyId() async {
+    final Random random = new Random();
+    final int digits = 5;
+    bool valid = false;
+    int partyId;
+    while (!valid) {
+      partyId = pow(10, digits - 1) +
+          random.nextInt(pow(10, digits) - pow(10, digits - 1));
+      var snap = await Firestore.instance
+          .collection('parties')
+          .document('$partyId')
+          .get();
+      if (!snap.exists) {
+        valid = true;
+      }
+    }
+    return partyId;
   }
 }

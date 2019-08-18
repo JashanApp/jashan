@@ -9,7 +9,7 @@ class Track {
   final int durationMs;
 
   Track(
-      {@required this.thumbnail,
+      {this.thumbnail,
       @required this.thumbnailUrl,
       @required this.title,
       @required this.artist,
