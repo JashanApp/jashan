@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:adhara_socket_io/adhara_socket_io.dart';
+import 'package:http/http.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
 
@@ -63,11 +64,13 @@ class SpotifyPlayer {
   }
 
   void playSong(Track song) {
-    socket.emit('play', [
-      {
-        'uris': ['${song.uri}']
-      }
-    ]);
+    put('https://api.spotify.com/v1/me/player/play',
+        headers: {'Authorization': 'Bearer ${user.accessToken}'},
+        body: '''
+        {
+          "uris": ["${song.uri}"]
+        }
+        ''');
   }
 
   void dispose() async {
