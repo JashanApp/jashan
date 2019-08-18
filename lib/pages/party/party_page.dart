@@ -109,14 +109,14 @@ class PartyPageState extends State<PartyPage> {
     var songDocument = widget.partyReference.collection('tracks').document(uri);
     songDocument.collection('upvotes').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
-        JashanUser user = new JashanUser(username: change.document.documentID);
-        var userVotesDocument = widget.partyReference.collection('users').document(user.username);
+        String username = change.document.documentID;
+        var userVotesDocument = widget.partyReference.collection('users').document(username);
         userVotesDocument.setData({});
         if (change.type == DocumentChangeType.added) {
-          songs[uri].upvotes.add(user);
+          songs[uri].upvotes.add(username);
           userVotesDocument.collection('upvotes').document(uri).setData({});
         } else if (change.type == DocumentChangeType.removed) {
-          songs[uri].upvotes.remove(user);
+          songs[uri].upvotes.remove(username);
           userVotesDocument.collection('upvotes').document(uri).delete();
         }
         setState(() => queue.sort());
@@ -124,11 +124,11 @@ class PartyPageState extends State<PartyPage> {
     });
     songDocument.collection('downvotes').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
-        JashanUser user = new JashanUser(username: change.document.documentID);
+        String username = change.document.documentID;
         if (change.type == DocumentChangeType.added) {
-          songs[uri].downvotes.add(user);
+          songs[uri].downvotes.add(username);
         } else if (change.type == DocumentChangeType.removed) {
-          songs[uri].downvotes.remove(user);
+          songs[uri].downvotes.remove(username);
         }
         setState(() => queue.sort());
       });
@@ -206,8 +206,9 @@ class PartyPageState extends State<PartyPage> {
                           data: data,
                           onLongPress: () => _showTrackInfo(appBar, data),
                           onUpvoteChange: (increase) =>
-                              _onSongUpvote(index, data, increase),
+                              _onSongVote(index, data, increase),
                           isCurrentPlaying: data == currentlyPlayingSong,
+                          user: widget.user,
                         );
                       },
                       itemCount:
@@ -270,7 +271,7 @@ class PartyPageState extends State<PartyPage> {
     );
   }
 
-  void _onSongUpvote(int songIndex, TrackQueueItem data, bool increase) {
+  void _onSongVote(int songIndex, TrackQueueItem data, bool increase) {
     if (songIndex != 0 || currentlyPlayingSong == null) {
       DocumentReference songDocument =
           widget.partyReference.collection('tracks').document(data.uri);

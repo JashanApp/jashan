@@ -18,14 +18,14 @@ class TrackInfoView extends StatelessWidget {
     String upvotes = "";
     if (data.upvotes.isNotEmpty) {
       data.upvotes.forEach((user) {
-        upvotes += "${user.username}, ";
+        upvotes += "${user}, ";
       });
       upvotes = upvotes.substring(0, upvotes.length - 2);
     }
     String downvotes = "";
     if (data.downvotes.isNotEmpty) {
       data.downvotes.forEach((user) {
-        downvotes += "${user.username}, ";
+        downvotes += "$user, ";
       });
       downvotes = downvotes.substring(0, downvotes.length - 2);
     }

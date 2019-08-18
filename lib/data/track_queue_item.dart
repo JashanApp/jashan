@@ -3,11 +3,10 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jashan/data/track.dart';
-import 'package:jashan/data/user.dart';
 
 class TrackQueueItem extends Track implements Comparable {
-  final Set<JashanUser> upvotes = new HashSet();
-  final Set<JashanUser> downvotes = new HashSet();
+  final Set<String> upvotes = new HashSet();
+  final Set<String> downvotes = new HashSet();
   String addedBy;
 
   TrackQueueItem.fromDocumentReference(DocumentSnapshot snapshot) :
@@ -30,6 +29,14 @@ class TrackQueueItem extends Track implements Comparable {
 
   int getValue() {
     return upvotes.length - downvotes.length;
+  }
+
+  bool userUpvoted(String user) {
+    return upvotes.contains(user);
+  }
+
+  bool userDownvoted(String user) {
+    return downvotes.contains(user);
   }
 
   @override
