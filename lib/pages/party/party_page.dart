@@ -50,24 +50,16 @@ class PartyPageState extends State<PartyPage> {
     TrackQueueItem trackQueueItem =
         TrackQueueItem.fromDocumentReference(snapshot);
     songs[snapshot.data['uri']] = trackQueueItem;
+    _addVoteListeners(trackQueueItem.uri);
     setState(() => queue.add(trackQueueItem));
     // todo if weird order, enforce async
   }
 
-  void _addSong(TrackQueueItem trackQueueItem) {
+  void _addVoteListeners(String uri) {
     var songDocument =
-        widget.partyReference.collection('tracks').document(trackQueueItem.uri);
-    songDocument.setData({
-      'thumbnail_url': trackQueueItem.thumbnailUrl,
-      'title': trackQueueItem.title,
-      'artist': trackQueueItem.artist,
-      'uri': trackQueueItem.uri,
-      'duration_ms': trackQueueItem.durationMs,
-      'added_by': trackQueueItem.addedBy,
-    });
+    widget.partyReference.collection('tracks').document(uri);
     songDocument.collection('upvotes').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
-        String uri = trackQueueItem.uri;
         JashanUser user = new JashanUser(username: change.document.documentID);
         if (change.type == DocumentChangeType.added) {
           songs[uri].upvotes.add(user);
@@ -79,7 +71,6 @@ class PartyPageState extends State<PartyPage> {
     });
     songDocument.collection('downvotes').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
-        String uri = trackQueueItem.uri;
         JashanUser user = new JashanUser(username: change.document.documentID);
         if (change.type == DocumentChangeType.added) {
           songs[uri].downvotes.add(user);
@@ -88,6 +79,19 @@ class PartyPageState extends State<PartyPage> {
         }
         setState(() => queue.sort());
       });
+    });
+  }
+
+  void _addSongToDatabase(TrackQueueItem trackQueueItem) {
+    var songDocument =
+        widget.partyReference.collection('tracks').document(trackQueueItem.uri);
+    songDocument.setData({
+      'thumbnail_url': trackQueueItem.thumbnailUrl,
+      'title': trackQueueItem.title,
+      'artist': trackQueueItem.artist,
+      'uri': trackQueueItem.uri,
+      'duration_ms': trackQueueItem.durationMs,
+      'added_by': trackQueueItem.addedBy,
     });
   }
 
@@ -115,7 +119,7 @@ class PartyPageState extends State<PartyPage> {
       widget.initialTracks.forEach((item) {
         var trackQueueItem =
         new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username);
-        _addSong(trackQueueItem);
+        _addSongToDatabase(trackQueueItem);
       });
     }
   }
@@ -293,7 +297,7 @@ class PartyPageState extends State<PartyPage> {
   void _openSearch() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            PartyPageSearching(widget.owner, queue, _addSong)));
+            PartyPageSearching(widget.owner, queue, _addSongToDatabase)));
   }
 
   void _showInfo() {
