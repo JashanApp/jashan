@@ -24,7 +24,8 @@ class TrackQueueItemCard extends StatelessWidget {
     bool downvotesHasUser = data.userDownvoted(user.username);
     return InkWell(
       onLongPress: onLongPress,
-      child: Padding(
+      child: Container(
+        color: isCurrentPlaying ? Theme.of(context).primaryColor : Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 3.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,12 +36,12 @@ class TrackQueueItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    width: 45,
-                    height: 45,
+                    width: 50,
+                    height: 50,
                     child: isCurrentPlaying
                         ? Container(
-                            width: 45,
-                            height: 45,
+                            width: 50,
+                            height: 50,
                             color: Colors.black.withOpacity(0.5),
                             child: Center(
                               child: Icon(
@@ -68,7 +69,9 @@ class TrackQueueItemCard extends StatelessWidget {
                           getTextWithCap(data.title, 18),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: isCurrentPlaying
+                                  ? Theme.of(context).accentColor
+                                  : Colors.black,
                               fontSize: 16),
                         ),
                         SizedBox(
@@ -78,7 +81,9 @@ class TrackQueueItemCard extends StatelessWidget {
                           getTextWithCap(data.artist, 22),
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
-                            color: Colors.black,
+                            color: isCurrentPlaying
+                                ? Theme.of(context).accentColor
+                                : Colors.black,
                             fontSize: 13,
                           ),
                         ),
@@ -97,10 +102,12 @@ class TrackQueueItemCard extends StatelessWidget {
                       "${data.getValue()}",
                       style: TextStyle(
                           fontSize: 22,
-                          color: upvotesHasUser || downvotesHasUser
+                          color: isCurrentPlaying
+                              ? Theme.of(context).accentColor
+                              : upvotesHasUser || downvotesHasUser
                               ? Theme.of(context).primaryColor
                               : Colors.black,
-                          fontWeight: upvotesHasUser || downvotesHasUser
+                          fontWeight: isCurrentPlaying || upvotesHasUser || downvotesHasUser
                               ? FontWeight.bold
                               : FontWeight.normal),
                     ),
@@ -111,7 +118,9 @@ class TrackQueueItemCard extends StatelessWidget {
                       iconSize: 24,
                       icon: Icon(
                         Icons.keyboard_arrow_up,
-                        color: upvotesHasUser
+                        color: isCurrentPlaying
+                            ? Theme.of(context).accentColor
+                            : upvotesHasUser
                             ? Theme.of(context).primaryColor
                             : Colors.black,
                       ),
@@ -123,9 +132,11 @@ class TrackQueueItemCard extends StatelessWidget {
                       iconSize: 24,
                       icon: Icon(
                         Icons.keyboard_arrow_down,
-                        color: downvotesHasUser
-                            ? Theme.of(context).primaryColor
-                            : Colors.black,
+                        color: isCurrentPlaying
+                            ? Theme.of(context).accentColor
+                            : downvotesHasUser
+                                ? Theme.of(context).primaryColor
+                                : Colors.black,
                       ),
                       onPressed: () => onUpvoteChange(false),
                     ),
