@@ -11,6 +11,7 @@ import 'package:jashan/data/track.dart';
 import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page_searching.dart';
+import 'package:jashan/util/jashan_queue_list.dart';
 import 'package:jashan/util/sorted_queue_list.dart';
 import 'package:jashan/util/spotify_player.dart';
 import 'package:jashan/util/text_utilities.dart';
@@ -43,57 +44,9 @@ class PartyPage extends StatefulWidget {
 class PartyPageState extends State<PartyPage> {
   final QueueList<TrackQueueItem> queue = new SortedQueueList();
   final Map<String, TrackQueueItem> songs = new HashMap();
+  final Map<String, JashanQueueList<String>> votes = new Map();
   TrackQueueItem currentlyPlayingSong;
   SpotifyPlayer spotifyPlayer;
-
-  void _addSongToQueue(DocumentSnapshot snapshot) {
-    TrackQueueItem trackQueueItem =
-        TrackQueueItem.fromDocumentReference(snapshot);
-    songs[snapshot.data['uri']] = trackQueueItem;
-    _addVoteListeners(trackQueueItem.uri);
-    setState(() => queue.add(trackQueueItem));
-    // todo if weird order, enforce async
-  }
-
-  void _addVoteListeners(String uri) {
-    var songDocument =
-    widget.partyReference.collection('tracks').document(uri);
-    songDocument.collection('upvotes').snapshots().listen((data) {
-      data.documentChanges.forEach((change) {
-        JashanUser user = new JashanUser(username: change.document.documentID);
-        if (change.type == DocumentChangeType.added) {
-          songs[uri].upvotes.add(user);
-        } else if (change.type == DocumentChangeType.removed) {
-          songs[uri].upvotes.remove(user);
-        }
-        setState(() => queue.sort());
-      });
-    });
-    songDocument.collection('downvotes').snapshots().listen((data) {
-      data.documentChanges.forEach((change) {
-        JashanUser user = new JashanUser(username: change.document.documentID);
-        if (change.type == DocumentChangeType.added) {
-          songs[uri].downvotes.add(user);
-        } else if (change.type == DocumentChangeType.removed) {
-          songs[uri].downvotes.remove(user);
-        }
-        setState(() => queue.sort());
-      });
-    });
-  }
-
-  void _addSongToDatabase(TrackQueueItem trackQueueItem) {
-    var songDocument =
-        widget.partyReference.collection('tracks').document(trackQueueItem.uri);
-    songDocument.setData({
-      'thumbnail_url': trackQueueItem.thumbnailUrl,
-      'title': trackQueueItem.title,
-      'artist': trackQueueItem.artist,
-      'uri': trackQueueItem.uri,
-      'duration_ms': trackQueueItem.durationMs,
-      'added_by': trackQueueItem.addedBy,
-    });
-  }
 
   @override
   void initState() {
@@ -122,6 +75,77 @@ class PartyPageState extends State<PartyPage> {
         _addSongToDatabase(trackQueueItem);
       });
     }
+    var usersCollection = widget.partyReference.collection('users');
+    usersCollection.snapshots().listen((data) {
+      data.documentChanges.forEach((change) {
+        var username = change.document.documentID;
+        if (change.type == DocumentChangeType.added) {
+          votes['"$username"'] = new JashanQueueList<String>(cap: 5);
+          usersCollection.document(username).collection('upvotes').snapshots().listen((data) {
+            data.documentChanges.forEach((change) {
+              if (change.type == DocumentChangeType.added) {
+                votes['"$username"'].add(change.document.documentID);
+              } else if (change.type == DocumentChangeType.removed) {
+                votes['"$username"'].remove(change.document.documentID);
+              }
+            });
+          });
+        } else if (change.type == DocumentChangeType.removed) {
+          votes.remove('"$username"');
+        }
+      });
+    });
+  }
+
+  void _addSongToQueue(DocumentSnapshot snapshot) {
+    TrackQueueItem trackQueueItem = TrackQueueItem.fromDocumentReference(snapshot);
+    songs[snapshot.data['uri']] = trackQueueItem;
+    _addVoteListeners(trackQueueItem.uri);
+    setState(() => queue.add(trackQueueItem));
+    // todo if weird order, enforce async
+  }
+
+  void _addVoteListeners(String uri) {
+    var songDocument = widget.partyReference.collection('tracks').document(uri);
+    songDocument.collection('upvotes').snapshots().listen((data) {
+      data.documentChanges.forEach((change) {
+        JashanUser user = new JashanUser(username: change.document.documentID);
+        var userVotesDocument = widget.partyReference.collection('users').document(user.username);
+        userVotesDocument.setData({});
+        if (change.type == DocumentChangeType.added) {
+          songs[uri].upvotes.add(user);
+          userVotesDocument.collection('upvotes').document(uri).setData({});
+        } else if (change.type == DocumentChangeType.removed) {
+          songs[uri].upvotes.remove(user);
+          userVotesDocument.collection('upvotes').document(uri).delete();
+        }
+        setState(() => queue.sort());
+      });
+    });
+    songDocument.collection('downvotes').snapshots().listen((data) {
+      data.documentChanges.forEach((change) {
+        JashanUser user = new JashanUser(username: change.document.documentID);
+        if (change.type == DocumentChangeType.added) {
+          songs[uri].downvotes.add(user);
+        } else if (change.type == DocumentChangeType.removed) {
+          songs[uri].downvotes.remove(user);
+        }
+        setState(() => queue.sort());
+      });
+    });
+  }
+
+  void _addSongToDatabase(TrackQueueItem trackQueueItem) {
+    var songDocument =
+    widget.partyReference.collection('tracks').document(trackQueueItem.uri);
+    songDocument.setData({
+      'thumbnail_url': trackQueueItem.thumbnailUrl,
+      'title': trackQueueItem.title,
+      'artist': trackQueueItem.artist,
+      'uri': trackQueueItem.uri,
+      'duration_ms': trackQueueItem.durationMs,
+      'added_by': trackQueueItem.addedBy,
+    });
   }
 
   @override
@@ -297,7 +321,7 @@ class PartyPageState extends State<PartyPage> {
   void _openSearch() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            PartyPageSearching(widget.owner, queue, _addSongToDatabase)));
+            PartyPageSearching(widget.owner, queue, votes, _addSongToDatabase)));
   }
 
   void _showInfo() {
