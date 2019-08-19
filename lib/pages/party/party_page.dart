@@ -57,8 +57,10 @@ class PartyPageState extends State<PartyPage> {
       user: widget.owner,
       onSongEnd: () {
         setState(() {
-          _currentlyPlayingSong = _queue.removeFirst();
-          _spotifyPlayer.playSong(_currentlyPlayingSong);
+          if (_queue.length >= 1) {
+            _currentlyPlayingSong = _queue.removeFirst();
+            _spotifyPlayer.playSong(_currentlyPlayingSong);
+          }
         });
       },
       onSongStart: () async {
@@ -354,9 +356,11 @@ class PartyPageState extends State<PartyPage> {
             ']'
             '}');
     setState(() {
-      _partyStarted = true;
-      _currentlyPlayingSong = _queue.removeFirst();
-      _spotifyPlayer.playSong(_currentlyPlayingSong);
+      if (_queue.length >= 1) {
+        _partyStarted = true;
+        _currentlyPlayingSong = _queue.removeFirst();
+        _spotifyPlayer.playSong(_currentlyPlayingSong);
+      }
     });
   }
 
