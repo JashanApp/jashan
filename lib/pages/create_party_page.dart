@@ -31,6 +31,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
   final TextEditingController _createTextController = TextEditingController();
   final Map<String, String> _idForPlaylist = new Map<String, String>();
   final List<Track> _tracks = List<Track>();
+  final GlobalKey scaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class _StartPartyPageState extends State<StartPartyPage> {
         kToolbarHeight;
     return Scaffold(
       appBar: appBar,
+      key: scaffoldKey,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -272,26 +274,34 @@ class _StartPartyPageState extends State<StartPartyPage> {
   }
 
   void _createParty() async {
-    int partyId = await _createPartyId();
-    var document =
-        Firestore.instance.collection('parties').document('$partyId');
-    document.setData({
-      'owner_username': widget.user.username,
-      'owner_access_token': widget.user.accessToken,
-      'party_name': _selectedText,
-    });
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PartyPage(
-              id: partyId,
-              name: _selectedText,
-              owner: widget.user,
-              user: widget.user,
-              initialTracks: _tracks,
-            ),
-      ),
-    );
+    if (_selectedText != '') {
+      int partyId = await _createPartyId();
+      var document =
+      Firestore.instance.collection('parties').document('$partyId');
+      document.setData({
+        'owner_username': widget.user.username,
+        'owner_access_token': widget.user.accessToken,
+        'party_name': _selectedText,
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              PartyPage(
+                id: partyId,
+                name: _selectedText,
+                owner: widget.user,
+                user: widget.user,
+                initialTracks: _tracks,
+              ),
+        ),
+      );
+    } else {
+      ScaffoldState scaffoldState = scaffoldKey.currentState;
+      scaffoldState.showSnackBar(SnackBar(
+        content: Text("You need to select a playlist or write a party name!"),
+      ));
+    }
   }
 
   Future<int> _createPartyId() async {
