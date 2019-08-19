@@ -60,6 +60,8 @@ class PartyPageState extends State<PartyPage> {
           if (_queue.length >= 1) {
             _currentlyPlayingSong = _queue.removeFirst();
             _spotifyPlayer.playSong(_currentlyPlayingSong);
+          } else if (_queue.length == 0) {
+            _currentlyPlayingSong = null;
           }
         });
       },
@@ -96,7 +98,7 @@ class PartyPageState extends State<PartyPage> {
     if (widget.initialTracks != null) {
       widget.initialTracks.forEach((item) {
         var trackQueueItem =
-        new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username);
+            new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username);
         _addSongToDatabase(trackQueueItem);
       });
     }
@@ -106,7 +108,11 @@ class PartyPageState extends State<PartyPage> {
         var username = change.document.documentID;
         if (change.type == DocumentChangeType.added) {
           _votes['"$username"'] = new JashanQueueList<String>(cap: 5);
-          usersCollection.document(username).collection('upvotes').snapshots().listen((data) {
+          usersCollection
+              .document(username)
+              .collection('upvotes')
+              .snapshots()
+              .listen((data) {
             data.documentChanges.forEach((change) {
               if (change.type == DocumentChangeType.added) {
                 _votes['"$username"'].add(change.document.documentID);
@@ -123,7 +129,8 @@ class PartyPageState extends State<PartyPage> {
   }
 
   void _addSongToQueue(DocumentSnapshot snapshot) {
-    TrackQueueItem trackQueueItem = TrackQueueItem.fromDocumentReference(snapshot);
+    TrackQueueItem trackQueueItem =
+        TrackQueueItem.fromDocumentReference(snapshot);
     _songs[snapshot.data['uri']] = trackQueueItem;
     _addVoteListeners(trackQueueItem.uri);
     setState(() => _queue.add(trackQueueItem));
@@ -135,7 +142,8 @@ class PartyPageState extends State<PartyPage> {
     songDocument.collection('upvotes').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
         String username = change.document.documentID;
-        var userVotesDocument = widget.partyReference.collection('users').document(username);
+        var userVotesDocument =
+            widget.partyReference.collection('users').document(username);
         userVotesDocument.setData({});
         if (change.type == DocumentChangeType.added) {
           _songs[uri].upvotes.add(username);
@@ -162,7 +170,7 @@ class PartyPageState extends State<PartyPage> {
 
   void _addSongToDatabase(TrackQueueItem trackQueueItem) {
     var songDocument =
-    widget.partyReference.collection('tracks').document(trackQueueItem.uri);
+        widget.partyReference.collection('tracks').document(trackQueueItem.uri);
     songDocument.setData({
       'thumbnail_url': trackQueueItem.thumbnailUrl,
       'title': trackQueueItem.title,
@@ -216,15 +224,23 @@ class PartyPageState extends State<PartyPage> {
             ),
             Expanded(
               flex: 8,
-              child: _queue.isNotEmpty
-                  ? ListView.builder(
+              child: _queue.isEmpty && _currentlyPlayingSong == null
+                  ? Center(
+                      child: Text(
+                        'No songs!',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    )
+                  : ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
                         TrackQueueItem data;
                         if (_currentlyPlayingSong == null) {
                           data = _queue[index];
-                        } else if (index == 0 && _currentlyPlayingSong != null) {
+                        } else if (index == 0 &&
+                            _currentlyPlayingSong != null) {
                           data = _currentlyPlayingSong;
-                        } else if (index != 0 && _currentlyPlayingSong != null) {
+                        } else if (index != 0 &&
+                            _currentlyPlayingSong != null) {
                           data = _queue[index - 1];
                         }
                         return TrackQueueItemCard(
@@ -232,20 +248,15 @@ class PartyPageState extends State<PartyPage> {
                           onLongPress: () => _showTrackInfo(appBar, data),
                           onUpvoteChange: (increase) =>
                               _onSongVote(index, data, increase),
-                          isCurrentPlaying: !_partyPaused && data == _currentlyPlayingSong,
+                          isCurrentPlaying:
+                              !_partyPaused && data == _currentlyPlayingSong,
                           user: widget.user,
                           titleChars: 18,
                           artistChars: 22,
                         );
                       },
-                      itemCount:
-                          _queue.length + (_currentlyPlayingSong == null ? 0 : 1),
-                    )
-                  : Center(
-                      child: Text(
-                        'No songs!',
-                        style: TextStyle(color: Colors.black),
-                      ),
+                      itemCount: _queue.length +
+                          (_currentlyPlayingSong == null ? 0 : 1),
                     ),
             ),
             Expanded(
@@ -258,7 +269,9 @@ class PartyPageState extends State<PartyPage> {
                     height: 50,
                     child: RaisedButton(
                       child: Text(
-                        _partyStarted ? _partyPaused ? "Continue Party" : "End Party" : "Start Party",
+                        _partyStarted
+                            ? _partyPaused ? "Continue Party" : "End Party"
+                            : "Start Party",
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                           fontSize: 20,
@@ -268,7 +281,9 @@ class PartyPageState extends State<PartyPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(75),
                       ),
-                      onPressed: !_partyStarted ? _startParty : _partyPaused ? _continueParty : _endParty,
+                      onPressed: !_partyStarted
+                          ? _startParty
+                          : _partyPaused ? _continueParty : _endParty,
                     ),
                   ),
                   SizedBox(
@@ -366,8 +381,8 @@ class PartyPageState extends State<PartyPage> {
 
   void _openSearch() {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            PartyPageSearching(widget.owner, _queue, _votes, _addSongToDatabase)));
+        builder: (context) => PartyPageSearching(
+            widget.owner, _queue, _votes, _addSongToDatabase)));
   }
 
   void _showInfo() {
