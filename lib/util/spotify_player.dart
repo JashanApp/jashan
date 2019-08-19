@@ -14,8 +14,6 @@ class SpotifyPlayer {
   final Function onSongEnd;
   final Function onSongPause;
   final SocketIOManager manager = SocketIOManager();
-  String timerSongUri;
-  Timer timer;
   SocketIO socket;
 
   SpotifyPlayer(
@@ -28,7 +26,7 @@ class SpotifyPlayer {
       'https://spotify-connect-ws.herokuapp.com/connect', // todo host our own
     ));
     socket.on("track_end", (message) {
-      timer = new Timer(Duration(seconds: 1), () {
+      new Timer(Duration(seconds: 1), () {
         if (onSongEnd != null) {
           onSongEnd();
         }
