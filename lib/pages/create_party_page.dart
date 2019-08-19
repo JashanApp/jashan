@@ -176,6 +176,8 @@ class _StartPartyPageState extends State<StartPartyPage> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return TrackCard(
                                     data: _tracks[index],
+                                    titleChars: 32,
+                                    artistChars: 35,
                                   );
                                 },
                                 itemCount: _tracks.length,
@@ -249,13 +251,11 @@ class _StartPartyPageState extends State<StartPartyPage> {
           String name = trackInfo['name'];
           int durationMs = trackInfo['duration_ms'];
           String uri = trackInfo['uri'];
-          name = getTextWithCap(name, 32);
           List artists = trackInfo['artists'];
           String artistsString = artists[0]['name'];
           for (int i = 1; i < artists.length; i++) {
             artistsString += ', ${artists[i]['name']}';
           }
-          artistsString = getTextWithCap(artistsString, 35);
           _tracks.add(
             Track(
               thumbnail: Image.network(imageUrl),

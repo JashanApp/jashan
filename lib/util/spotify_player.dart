@@ -92,13 +92,11 @@ class SpotifyPlayer {
     String uri = trackInfo['uri'];
     String name = trackInfo['name'];
     int durationMs = trackInfo['duration_ms'];
-    name = getTextWithCap(name, 18);
     List artists = trackInfo['artists'];
     String artistsString = artists[0]['name'];
     for (int i = 1; i < artists.length; i++) {
       artistsString += ', ${artists[i]['name']}';
     }
-    artistsString = getTextWithCap(artistsString, 22);
     return Track(
         thumbnailUrl: imageUrl,
         title: name,

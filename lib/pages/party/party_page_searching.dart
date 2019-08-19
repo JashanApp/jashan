@@ -85,6 +85,8 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           return TrackCard(
             data: data,
             onClick: () => _addTrackToQueue(data),
+            titleChars: 34,
+            artistChars: 37,
           );
         },
       ),
@@ -108,13 +110,11 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           String uri = result['uri'];
           String name = result['name'];
           int durationMs = result['duration_ms'];
-          name = getTextWithCap(name, 34);
           List artists = result['artists'];
           String artistsString = artists[0]['name'];
           for (int i = 1; i < artists.length; i++) {
             artistsString += ', ${artists[i]['name']}';
           }
-          artistsString = getTextWithCap(artistsString, 37);
           _searchItems.add(
             Track(
                 thumbnail: Image.network(imageUrl),
@@ -149,13 +149,11 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
       String imageUrl = songInfo['album']['images'][0]['url'];
       String name = songInfo['name'];
       int durationMs = songInfo['duration_ms'];
-      name = getTextWithCap(name, 34);
       List artists = songInfo['artists'];
       String artistsString = artists[0]['name'];
       for (int i = 1; i < artists.length; i++) {
         artistsString += ', ${artists[i]['name']}';
       }
-      artistsString = getTextWithCap(artistsString, 37);
       setState(() {
         _recommendedItems.add(
           Track(

@@ -224,6 +224,8 @@ class PartyPageState extends State<PartyPage> {
                               _onSongVote(index, data, increase),
                           isCurrentPlaying: !_partyPaused && data == _currentlyPlayingSong,
                           user: widget.user,
+                          titleChars: 18,
+                          artistChars: 22,
                         );
                       },
                       itemCount:

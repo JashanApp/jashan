@@ -10,13 +10,17 @@ class TrackQueueItemCard extends StatelessWidget {
   final bool isCurrentPlaying;
   final GestureLongPressCallback onLongPress;
   final JashanUser user;
+  final int titleChars;
+  final int artistChars;
 
   TrackQueueItemCard(
       {@required this.data,
       this.onUpvoteChange,
       this.onLongPress,
       this.isCurrentPlaying,
-      this.user});
+      this.user,
+      this.titleChars,
+      this.artistChars});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +71,7 @@ class TrackQueueItemCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            getTextWithCap(data.title, 18),
+                            getTextWithCap(data.title, titleChars),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: isCurrentPlaying
@@ -79,7 +83,7 @@ class TrackQueueItemCard extends StatelessWidget {
                             height: 5,
                           ),
                           Text(
-                            getTextWithCap(data.artist, 22),
+                            getTextWithCap(data.artist, artistChars),
                             style: TextStyle(
                               fontWeight: FontWeight.w300,
                               color: isCurrentPlaying
