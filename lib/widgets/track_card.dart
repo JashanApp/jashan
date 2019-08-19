@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jashan/data/track.dart';
+import 'package:jashan/util/text_utilities.dart';
 
 class TrackCard extends StatelessWidget {
   final Track data;
   final GestureTapCallback onClick;
+  final int titleChars;
+  final int artistChars;
 
-  TrackCard({@required this.data, this.onClick});
+  TrackCard({@required this.data, this.onClick, this.titleChars, this.artistChars});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class TrackCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    data.title,
+                    getTextWithCap(data.title, titleChars),
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -38,7 +41,7 @@ class TrackCard extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    data.artist,
+                    getTextWithCap(data.artist, artistChars),
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
                       color: Colors.black,

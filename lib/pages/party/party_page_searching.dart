@@ -25,7 +25,9 @@ class PartyPageSearching extends StatefulWidget {
 }
 
 class _PartyPageSearchingState extends State<PartyPageSearching> {
+  String _searchQuery = "";
   List<Track> _searchItems = List<Track>();
+  List<Track> _recommendedItems = List<Track>();
   TextEditingController _searchQueryController = TextEditingController();
 
   @override
@@ -37,18 +39,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
       totalVotes += list.length;
     });
     if (totalVotes >= minimumVotesForRecommendations) {
-      post('https://us-central1-jashan.cloudfunctions.net/recommendations_updated',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: '''
-      {
-        "token": "${widget.partyOwner.accessToken}",
-        "upvotes_for_user": ${widget.votes.toString()}
-      }
-      ''').then((response) {
-        print(response.body);
-      });
+      populateRecommendations();
     }
   }
 
@@ -62,10 +53,14 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           autocorrect: false,
           controller: _searchQueryController,
           onSubmitted: (searchQuery) {
+            _searchQuery = searchQuery;
             if (searchQuery.length > 2) {
               _searchItems.clear();
               _repopulateSearchList(searchQuery);
             }
+          },
+          onChanged: (searchQuery) {
+            _searchQuery = searchQuery;
           },
           style: TextStyle(
             color: Theme.of(context).accentColor,
@@ -78,17 +73,20 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         ),
       ),
       body: ListView.builder(
-        itemCount: _searchItems.length + 1,
+        itemCount: _searchQuery.length < 2 ? _recommendedItems.length + 1 : _searchItems.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return SizedBox(
-              height: 10,
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text("Recommended Songs", style: TextStyle(color: Colors.black),),
             );
           }
-          final Track data = _searchItems[index - 1];
+          final Track data = _searchQuery.length < 2 ? _recommendedItems[index - 1] : _searchItems[index - 1];
           return TrackCard(
             data: data,
             onClick: () => _addTrackToQueue(data),
+            titleChars: 34,
+            artistChars: 37,
           );
         },
       ),
@@ -112,13 +110,11 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
           String uri = result['uri'];
           String name = result['name'];
           int durationMs = result['duration_ms'];
-          name = getTextWithCap(name, 34);
           List artists = result['artists'];
           String artistsString = artists[0]['name'];
           for (int i = 1; i < artists.length; i++) {
             artistsString += ', ${artists[i]['name']}';
           }
-          artistsString = getTextWithCap(artistsString, 37);
           _searchItems.add(
             Track(
                 thumbnail: Image.network(imageUrl),
@@ -131,5 +127,44 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         });
       });
     }
+  }
+
+  void populateRecommendations() async {
+    Response recommendationsResponse = await post('https://us-central1-jashan.cloudfunctions.net/recommendations_updated',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: '''
+      {
+        "token": "${widget.partyOwner.accessToken}",
+        "upvotes_for_user": ${widget.votes.toString()}
+      }
+      ''');
+    List<String> trackUris = recommendationsResponse.body.replaceAll("'", "").split(",");
+    trackUris.forEach((String uri) async {
+      String id = uri.split(":")[2];
+      Response songInfoResponse = await get('https://api.spotify.com/v1/tracks/$id',
+          headers: {'Authorization': 'Bearer ${widget.partyOwner.accessToken}'});
+      Map songInfo = json.decode(songInfoResponse.body);
+      String imageUrl = songInfo['album']['images'][0]['url'];
+      String name = songInfo['name'];
+      int durationMs = songInfo['duration_ms'];
+      List artists = songInfo['artists'];
+      String artistsString = artists[0]['name'];
+      for (int i = 1; i < artists.length; i++) {
+        artistsString += ', ${artists[i]['name']}';
+      }
+      setState(() {
+        _recommendedItems.add(
+          Track(
+              thumbnail: Image.network(imageUrl),
+              thumbnailUrl: imageUrl,
+              title: name,
+              artist: artistsString,
+              uri: uri,
+              durationMs: durationMs),
+        );
+      });
+    });
   }
 }

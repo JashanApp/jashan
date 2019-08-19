@@ -1,18 +1,25 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:adhara_socket_io/adhara_socket_io.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
+import 'package:jashan/util/text_utilities.dart';
 
 class SpotifyPlayer {
   final JashanUser user;
-  Function onSongChange;
+  final Function onSongStart;
+  final Function onSongEnd;
+  final Function onSongPause;
+  final SocketIOManager manager = SocketIOManager();
   String timerSongUri;
   Timer timer;
-  final SocketIOManager manager = SocketIOManager();
   SocketIO socket;
 
-  SpotifyPlayer({this.user}) {
+  SpotifyPlayer(
+      {this.user, this.onSongEnd, this.onSongStart, this.onSongPause}) {
     initSocket();
   }
 
@@ -22,14 +29,23 @@ class SpotifyPlayer {
     ));
     socket.on("track_end", (message) {
       timer = new Timer(Duration(seconds: 1), () {
-        onSongChange();
+        if (onSongEnd != null) {
+          onSongEnd();
+        }
       });
     });
     socket.on("track_change", (message) {
       print('changed');
     });
     socket.on("playback_paused", (message) {
-      print('paused');
+      if (onSongPause != null) {
+        onSongPause();
+      }
+    });
+    socket.on("playback_started", (message) {
+      if (onSongStart != null) {
+        onSongStart();
+      }
     });
     socket.connect();
     socket.onReconnect((data) {
@@ -58,16 +74,35 @@ class SpotifyPlayer {
     });
   }
 
-  void setOnSongChange(Function onSongChange) {
-    this.onSongChange = onSongChange;
+  void playSong(Track song) {
+    put('https://api.spotify.com/v1/me/player/play',
+        headers: {'Authorization': 'Bearer ${user.accessToken}'},
+        body: '''
+        {
+          "uris": ["${song.uri}"]
+        }
+        ''');
   }
 
-  void playSong(Track song) {
-    socket.emit('play', [
-      {
-        'uris': ['${song.uri}']
-      }
-    ]);
+  Future<Track> getCurrentSongPlaying() async {
+    Response playerResponse = await get('https://api.spotify.com/v1/me/player',
+        headers: {'Authorization': 'Bearer ${user.accessToken}'});
+    Map trackInfo = json.decode(playerResponse.body)['item'];
+    String imageUrl = trackInfo['album']['images'][0]['url'];
+    String uri = trackInfo['uri'];
+    String name = trackInfo['name'];
+    int durationMs = trackInfo['duration_ms'];
+    List artists = trackInfo['artists'];
+    String artistsString = artists[0]['name'];
+    for (int i = 1; i < artists.length; i++) {
+      artistsString += ', ${artists[i]['name']}';
+    }
+    return Track(
+        thumbnailUrl: imageUrl,
+        title: name,
+        artist: artistsString,
+        uri: uri,
+        durationMs: durationMs);
   }
 
   void dispose() async {
