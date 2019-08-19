@@ -42,24 +42,39 @@ class PartyPage extends StatefulWidget {
 }
 
 class PartyPageState extends State<PartyPage> {
-  final QueueList<TrackQueueItem> queue = new SortedQueueList();
-  final Map<String, TrackQueueItem> songs = new HashMap();
-  final Map<String, JashanQueueList<String>> votes = new Map();
-  TrackQueueItem currentlyPlayingSong;
-  SpotifyPlayer spotifyPlayer;
+  final QueueList<TrackQueueItem> _queue = new SortedQueueList();
+  final Map<String, TrackQueueItem> _songs = new HashMap();
+  final Map<String, JashanQueueList<String>> _votes = new Map();
+  TrackQueueItem _currentlyPlayingSong;
+  SpotifyPlayer _spotifyPlayer;
+  bool _partyStarted = false;
+  bool _partyPaused = false;
 
   @override
   void initState() {
     super.initState();
-    spotifyPlayer = new SpotifyPlayer(
+    _spotifyPlayer = new SpotifyPlayer(
       user: widget.owner,
+      onSongEnd: () {
+        setState(() {
+          _currentlyPlayingSong = _queue.removeFirst();
+          _spotifyPlayer.playSong(_currentlyPlayingSong);
+        });
+      },
+      onSongStart: () async {
+        Track currentSong = await _spotifyPlayer.getCurrentSongPlaying();
+        if (currentSong.uri == _currentlyPlayingSong.uri) {
+          setState(() {
+            _partyPaused = false;
+          });
+        }
+      },
+      onSongPause: () {
+        setState(() {
+          _partyPaused = true;
+        });
+      },
     );
-    spotifyPlayer.setOnSongChange(() {
-      setState(() {
-        currentlyPlayingSong = queue.removeFirst();
-        spotifyPlayer.playSong(currentlyPlayingSong);
-      });
-    });
     widget.partyReference.collection('tracks').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
         var document = change.document;
@@ -80,18 +95,18 @@ class PartyPageState extends State<PartyPage> {
       data.documentChanges.forEach((change) {
         var username = change.document.documentID;
         if (change.type == DocumentChangeType.added) {
-          votes['"$username"'] = new JashanQueueList<String>(cap: 5);
+          _votes['"$username"'] = new JashanQueueList<String>(cap: 5);
           usersCollection.document(username).collection('upvotes').snapshots().listen((data) {
             data.documentChanges.forEach((change) {
               if (change.type == DocumentChangeType.added) {
-                votes['"$username"'].add(change.document.documentID);
+                _votes['"$username"'].add(change.document.documentID);
               } else if (change.type == DocumentChangeType.removed) {
-                votes['"$username"'].remove(change.document.documentID);
+                _votes['"$username"'].remove(change.document.documentID);
               }
             });
           });
         } else if (change.type == DocumentChangeType.removed) {
-          votes.remove('"$username"');
+          _votes.remove('"$username"');
         }
       });
     });
@@ -99,9 +114,9 @@ class PartyPageState extends State<PartyPage> {
 
   void _addSongToQueue(DocumentSnapshot snapshot) {
     TrackQueueItem trackQueueItem = TrackQueueItem.fromDocumentReference(snapshot);
-    songs[snapshot.data['uri']] = trackQueueItem;
+    _songs[snapshot.data['uri']] = trackQueueItem;
     _addVoteListeners(trackQueueItem.uri);
-    setState(() => queue.add(trackQueueItem));
+    setState(() => _queue.add(trackQueueItem));
     // todo if weird order, enforce async
   }
 
@@ -113,24 +128,24 @@ class PartyPageState extends State<PartyPage> {
         var userVotesDocument = widget.partyReference.collection('users').document(username);
         userVotesDocument.setData({});
         if (change.type == DocumentChangeType.added) {
-          songs[uri].upvotes.add(username);
+          _songs[uri].upvotes.add(username);
           userVotesDocument.collection('upvotes').document(uri).setData({});
         } else if (change.type == DocumentChangeType.removed) {
-          songs[uri].upvotes.remove(username);
+          _songs[uri].upvotes.remove(username);
           userVotesDocument.collection('upvotes').document(uri).delete();
         }
-        setState(() => queue.sort());
+        setState(() => _queue.sort());
       });
     });
     songDocument.collection('downvotes').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
         String username = change.document.documentID;
         if (change.type == DocumentChangeType.added) {
-          songs[uri].downvotes.add(username);
+          _songs[uri].downvotes.add(username);
         } else if (change.type == DocumentChangeType.removed) {
-          songs[uri].downvotes.remove(username);
+          _songs[uri].downvotes.remove(username);
         }
-        setState(() => queue.sort());
+        setState(() => _queue.sort());
       });
     });
   }
@@ -191,28 +206,28 @@ class PartyPageState extends State<PartyPage> {
             ),
             Expanded(
               flex: 8,
-              child: queue.isNotEmpty
+              child: _queue.isNotEmpty
                   ? ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
                         TrackQueueItem data;
-                        if (currentlyPlayingSong == null) {
-                          data = queue[index];
-                        } else if (index == 0 && currentlyPlayingSong != null) {
-                          data = currentlyPlayingSong;
-                        } else if (index != 0 && currentlyPlayingSong != null) {
-                          data = queue[index - 1];
+                        if (_currentlyPlayingSong == null) {
+                          data = _queue[index];
+                        } else if (index == 0 && _currentlyPlayingSong != null) {
+                          data = _currentlyPlayingSong;
+                        } else if (index != 0 && _currentlyPlayingSong != null) {
+                          data = _queue[index - 1];
                         }
                         return TrackQueueItemCard(
                           data: data,
                           onLongPress: () => _showTrackInfo(appBar, data),
                           onUpvoteChange: (increase) =>
                               _onSongVote(index, data, increase),
-                          isCurrentPlaying: data == currentlyPlayingSong,
+                          isCurrentPlaying: !_partyPaused && data == _currentlyPlayingSong,
                           user: widget.user,
                         );
                       },
                       itemCount:
-                          queue.length + (currentlyPlayingSong == null ? 0 : 1),
+                          _queue.length + (_currentlyPlayingSong == null ? 0 : 1),
                     )
                   : Center(
                       child: Text(
@@ -231,7 +246,7 @@ class PartyPageState extends State<PartyPage> {
                     height: 50,
                     child: RaisedButton(
                       child: Text(
-                        "Start Party",
+                        _partyStarted ? _partyPaused ? "Continue Party" : "End Party" : "Start Party",
                         style: TextStyle(
                           color: Theme.of(context).accentColor,
                           fontSize: 20,
@@ -241,7 +256,7 @@ class PartyPageState extends State<PartyPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(75),
                       ),
-                      onPressed: _startParty,
+                      onPressed: !_partyStarted ? _startParty : _partyPaused ? _continueParty : _endParty,
                     ),
                   ),
                   SizedBox(
@@ -272,7 +287,7 @@ class PartyPageState extends State<PartyPage> {
   }
 
   void _onSongVote(int songIndex, TrackQueueItem data, bool increase) {
-    if (songIndex != 0 || currentlyPlayingSong == null) {
+    if (songIndex != 0 || _currentlyPlayingSong == null) {
       DocumentReference songDocument =
           widget.partyReference.collection('tracks').document(data.uri);
       CollectionReference vote = increase
@@ -293,7 +308,22 @@ class PartyPageState extends State<PartyPage> {
   @override
   void dispose() {
     super.dispose();
-    spotifyPlayer.dispose();
+    _spotifyPlayer.dispose();
+  }
+
+  void _continueParty() async {
+    Track currentSong = await _spotifyPlayer.getCurrentSongPlaying();
+    if (currentSong.uri == _currentlyPlayingSong.uri) {
+      put('https://api.spotify.com/v1/me/player/play',
+          headers: {'Authorization': 'Bearer ${widget.owner.accessToken}'});
+    } else {
+      _spotifyPlayer.playSong(_currentlyPlayingSong);
+      _partyPaused = false;
+    }
+  }
+
+  void _endParty() {
+    // todo
   }
 
   void _startParty() async {
@@ -314,15 +344,16 @@ class PartyPageState extends State<PartyPage> {
             ']'
             '}');
     setState(() {
-      currentlyPlayingSong = queue.removeFirst();
-      spotifyPlayer.playSong(currentlyPlayingSong);
+      _partyStarted = true;
+      _currentlyPlayingSong = _queue.removeFirst();
+      _spotifyPlayer.playSong(_currentlyPlayingSong);
     });
   }
 
   void _openSearch() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            PartyPageSearching(widget.owner, queue, votes, _addSongToDatabase)));
+            PartyPageSearching(widget.owner, _queue, _votes, _addSongToDatabase)));
   }
 
   void _showInfo() {
