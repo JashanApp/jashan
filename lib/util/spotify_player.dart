@@ -13,11 +13,12 @@ class SpotifyPlayer {
   final Function onSongStart;
   final Function onSongEnd;
   final Function onSongPause;
+  final Function onSongChange;
   final SocketIOManager manager = SocketIOManager();
   SocketIO socket;
 
   SpotifyPlayer(
-      {this.user, this.onSongEnd, this.onSongStart, this.onSongPause}) {
+      {this.user, this.onSongEnd, this.onSongStart, this.onSongPause, this.onSongChange}) {
     initSocket();
   }
 
@@ -33,7 +34,9 @@ class SpotifyPlayer {
       });
     });
     socket.on("track_change", (message) {
-      print('changed');
+      if (onSongChange != null) {
+        onSongChange();
+      }
     });
     socket.on("playback_paused", (message) {
       if (onSongPause != null) {

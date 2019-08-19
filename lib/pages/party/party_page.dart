@@ -74,6 +74,14 @@ class PartyPageState extends State<PartyPage> {
           _partyPaused = true;
         });
       },
+      onSongChange: () async {
+        Track currentSong = await _spotifyPlayer.getCurrentSongPlaying();
+        if (currentSong.uri != _currentlyPlayingSong.uri) {
+          setState(() {
+            _partyPaused = true;
+          });
+        }
+      },
     );
     widget.partyReference.collection('tracks').snapshots().listen((data) {
       data.documentChanges.forEach((change) {
