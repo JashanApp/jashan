@@ -42,6 +42,7 @@ class PartyPage extends StatefulWidget {
 }
 
 class PartyPageState extends State<PartyPage> {
+  static const String START_PARTY_COMMAND = "start party";
   final QueueList<TrackQueueItem> _queue = new SortedQueueList();
   final Map<String, TrackQueueItem> _songs = new HashMap();
   final Map<String, JashanQueueList<String>> _votes = new Map();
@@ -64,6 +65,8 @@ class PartyPageState extends State<PartyPage> {
             }
           } else if (_queue.length == 0) {
             _currentlyPlayingSong = null;
+            _partyStarted = false;
+            _partyPaused = false;
           }
         });
       },
@@ -125,6 +128,18 @@ class PartyPageState extends State<PartyPage> {
           });
         } else if (change.type == DocumentChangeType.removed) {
           _votes.remove('"$username"');
+        }
+      });
+    });
+    var commandsCollection = widget.partyReference.collection('commands');
+    commandsCollection.snapshots().listen((data) {
+      data.documentChanges.forEach((change) {
+        var command = change.document.documentID;
+        if (change.type == DocumentChangeType.added) {
+          if (command == START_PARTY_COMMAND) {
+            _startParty();
+            change.document.reference.delete();
+          }
         }
       });
     });
@@ -284,7 +299,7 @@ class PartyPageState extends State<PartyPage> {
                         borderRadius: BorderRadius.circular(75),
                       ),
                       onPressed: !_partyStarted
-                          ? _startParty
+                          ? _issueStartPartyCommand
                           : _partyPaused ? _continueParty : _endParty,
                     ),
                   ),
@@ -342,6 +357,9 @@ class PartyPageState extends State<PartyPage> {
 
   void _continueParty() async {
     Track currentSong = await _spotifyPlayer.getCurrentSongPlaying();
+    if (currentSong == null) {
+      return;
+    }
     if (currentSong.uri == _currentlyPlayingSong.uri) {
       put('https://api.spotify.com/v1/me/player/play',
           headers: {'Authorization': 'Bearer ${widget.owner.accessToken}'});
@@ -355,6 +373,11 @@ class PartyPageState extends State<PartyPage> {
 
   void _endParty() {
     // todo
+  }
+
+  void _issueStartPartyCommand() {
+    var commandsCollection = widget.partyReference.collection('commands');
+    commandsCollection.document(START_PARTY_COMMAND).setData({});
   }
 
   void _startParty() async {
