@@ -278,54 +278,71 @@ class PartyPageState extends State<PartyPage> {
             ),
             Expanded(
               flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2 - 30,
-                    height: 50,
-                    child: RaisedButton(
-                      child: Text(
-                        _partyStarted
-                            ? _partyPaused ? "Continue Party" : "End Party"
-                            : "Start Party",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 20,
+              child: widget.user == widget.owner
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2 - 30,
+                          height: 50,
+                          child: RaisedButton(
+                            child: Text(
+                              _partyStarted
+                                  ? _partyPaused
+                                      ? "Continue Party"
+                                      : "End Party"
+                                  : "Start Party",
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontSize: 20,
+                              ),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(75),
+                            ),
+                            onPressed: !_partyStarted
+                                ? _issueStartPartyCommand
+                                : _partyPaused ? _continueParty : _endParty,
+                          ),
                         ),
-                      ),
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(75),
-                      ),
-                      onPressed: !_partyStarted
-                          ? _issueStartPartyCommand
-                          : _partyPaused ? _continueParty : _endParty,
+                        _moreInfoButton(
+                            MediaQuery.of(context).size.width / 2 - 30, true),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _moreInfoButton(
+                            MediaQuery.of(context).size.width / 2, false)
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2 - 30,
-                    height: 50,
-                    child: RaisedButton(
-                      child: Text(
-                        "More Info",
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 20,
-                        ),
-                      ),
-                      color: Theme.of(context).primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(75),
-                      ),
-                      onPressed: _showInfo,
-                    ),
-                  ),
-                ],
-              ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _moreInfoButton(double width, bool circle) {
+    return SizedBox(
+      width: width,
+      height: 50,
+      child: RaisedButton(
+        child: Text(
+          "More Info",
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontSize: 20,
+          ),
+        ),
+        color: Theme.of(context).primaryColor,
+        shape: circle
+            ? RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(75),
+              )
+            : ButtonTheme.of(context).shape,
+        onPressed: _showInfo,
       ),
     );
   }
