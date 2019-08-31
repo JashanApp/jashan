@@ -8,6 +8,7 @@ class TrackQueueItem extends Track implements Comparable {
   final Set<String> upvotes = new HashSet();
   final Set<String> downvotes = new HashSet();
   String addedBy;
+  int addedTimeStamp;
 
   TrackQueueItem.fromDocumentReference(DocumentSnapshot snapshot) :
       super(thumbnailUrl: snapshot.data['thumbnail_url'],
@@ -16,9 +17,10 @@ class TrackQueueItem extends Track implements Comparable {
           uri: snapshot.data['uri'],
           durationMs: snapshot.data['duration_ms']) {
     addedBy = snapshot.data['added_by'];
+    addedTimeStamp = snapshot.data['added_time_stamp'];
   }
 
-  TrackQueueItem.fromTrack(Track track, {@required this.addedBy})
+  TrackQueueItem.fromTrack(Track track, {@required this.addedBy, @required this.addedTimeStamp})
       : super(
             thumbnail: track.thumbnail,
             thumbnailUrl: track.thumbnailUrl,
@@ -42,6 +44,9 @@ class TrackQueueItem extends Track implements Comparable {
   @override
   int compareTo(other) {
     if (other is TrackQueueItem) {
+      if (other.getValue() == getValue()) {
+        return addedTimeStamp - other.addedTimeStamp;
+      }
       return other.getValue() - getValue();
     }
     return 0;

@@ -103,7 +103,7 @@ class PartyPageState extends State<PartyPage> {
     if (widget.initialTracks != null) {
       widget.initialTracks.forEach((item) {
         var trackQueueItem =
-            new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username);
+            new TrackQueueItem.fromTrack(item, addedBy: widget.owner.username, addedTimeStamp: new DateTime.now().millisecondsSinceEpoch);
         _addSongToDatabase(trackQueueItem);
       });
     }
@@ -195,6 +195,7 @@ class PartyPageState extends State<PartyPage> {
       'uri': trackQueueItem.uri,
       'duration_ms': trackQueueItem.durationMs,
       'added_by': trackQueueItem.addedBy,
+      'added_time_stamp': trackQueueItem.addedTimeStamp,
     });
   }
 

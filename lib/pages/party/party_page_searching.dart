@@ -7,7 +7,6 @@ import 'package:jashan/data/track.dart';
 import 'package:jashan/data/track_queue_item.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/util/jashan_queue_list.dart';
-import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/track_card.dart';
 
 class PartyPageSearching extends StatefulWidget {
@@ -94,7 +93,7 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
   }
 
   void _addTrackToQueue(Track track) {
-    final TrackQueueItem queueItem = TrackQueueItem.fromTrack(track, addedBy: widget.partyOwner.username);
+    final TrackQueueItem queueItem = TrackQueueItem.fromTrack(track, addedBy: widget.partyOwner.username, addedTimeStamp: new DateTime.now().millisecondsSinceEpoch);
     widget.onAddSong(queueItem);
   }
 
