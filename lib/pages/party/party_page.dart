@@ -14,6 +14,7 @@ import 'package:jashan/pages/party/party_page_searching.dart';
 import 'package:jashan/util/jashan_queue_list.dart';
 import 'package:jashan/util/sorted_queue_list.dart';
 import 'package:jashan/util/spotify_player.dart';
+import 'package:jashan/util/spotify_utilities.dart';
 import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/track_info_view.dart';
 import 'package:jashan/widgets/track_queue_item_card.dart';
@@ -50,6 +51,7 @@ class PartyPageState extends State<PartyPage> {
   SpotifyPlayer _spotifyPlayer;
   bool _partyStarted = false;
   bool _partyPaused = false;
+  final GlobalKey scaffoldKey = new GlobalKey();
 
   @override
   void initState() {
@@ -218,6 +220,7 @@ class PartyPageState extends State<PartyPage> {
     );
     return Scaffold(
       appBar: appBar,
+      key: scaffoldKey,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
@@ -399,30 +402,16 @@ class PartyPageState extends State<PartyPage> {
   }
 
   void _startParty() async {
-    Response availableDevicesResponse = await get(
-        'https://api.spotify.com/v1/me/player/devices',
-        headers: {'Authorization': 'Bearer ${widget.owner.accessToken}'});
-    List availableDevices =
-        json.decode(availableDevicesResponse.body)['devices'];
-    await put('https://api.spotify.com/v1/me/player',
-        headers: {
-          'Authorization': 'Bearer ${widget.owner.accessToken}',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: '{'
-            '"device_ids": ['
-            '"${availableDevices[0]['id']}"'
-            ']'
-            '}');
-    setState(() {
-      if (_queue.length >= 1) {
-        _partyStarted = true;
-        _currentlyPlayingSong = _queue.removeFirst();
-        if (widget.user == widget.owner) {
-          _spotifyPlayer.playSong(_currentlyPlayingSong);
+    markDeviceAsActive(widget.owner, scaffoldKey.currentState, () {
+      setState(() {
+        if (_queue.length >= 1) {
+          _partyStarted = true;
+          _currentlyPlayingSong = _queue.removeFirst();
+          if (widget.user == widget.owner) {
+            _spotifyPlayer.playSong(_currentlyPlayingSong);
+          }
         }
-      }
+      });
     });
   }
 
