@@ -59,7 +59,9 @@ class PartyPageState extends State<PartyPage> {
         setState(() {
           if (_queue.length >= 1) {
             _currentlyPlayingSong = _queue.removeFirst();
-            _spotifyPlayer.playSong(_currentlyPlayingSong);
+            if (widget.user == widget.owner) {
+              _spotifyPlayer.playSong(_currentlyPlayingSong);
+            }
           } else if (_queue.length == 0) {
             _currentlyPlayingSong = null;
           }
@@ -344,7 +346,9 @@ class PartyPageState extends State<PartyPage> {
       put('https://api.spotify.com/v1/me/player/play',
           headers: {'Authorization': 'Bearer ${widget.owner.accessToken}'});
     } else {
-      _spotifyPlayer.playSong(_currentlyPlayingSong);
+      if (widget.user == widget.owner) {
+        _spotifyPlayer.playSong(_currentlyPlayingSong);
+      }
       _partyPaused = false;
     }
   }
@@ -374,7 +378,9 @@ class PartyPageState extends State<PartyPage> {
       if (_queue.length >= 1) {
         _partyStarted = true;
         _currentlyPlayingSong = _queue.removeFirst();
-        _spotifyPlayer.playSong(_currentlyPlayingSong);
+        if (widget.user == widget.owner) {
+          _spotifyPlayer.playSong(_currentlyPlayingSong);
+        }
       }
     });
   }
