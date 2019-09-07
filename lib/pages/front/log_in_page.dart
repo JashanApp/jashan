@@ -54,7 +54,8 @@ class LogInPageState extends State<LogInPage> {
                           Icons.person_outline,
                           color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
+                        hintStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Username',
                       ),
@@ -76,7 +77,8 @@ class LogInPageState extends State<LogInPage> {
                           Icons.lock_outline,
                           color: Theme.of(context).accentColor,
                         ),
-                        hintStyle: TextStyle(color: Theme.of(context).accentColor),
+                        hintStyle:
+                            TextStyle(color: Theme.of(context).accentColor),
                         border: UnderlineInputBorder(),
                         hintText: 'Password',
                       ),
@@ -268,10 +270,12 @@ class LogInPageState extends State<LogInPage> {
     // todo add a state
 
     FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebviewPlugin
-        .launch('https://accounts.spotify.com/authorize?client_id=$CLIENT_ID'
-            '&response_type=$RESPONSE_TYPE&redirect_uri=$REDIRECT_URI'
-            '&scope=$scope&show_dialog=$DEBUG}');
+    flutterWebviewPlugin.launch(
+        'https://accounts.spotify.com/authorize?client_id=$CLIENT_ID'
+        '&response_type=$RESPONSE_TYPE&redirect_uri=$REDIRECT_URI'
+        '&scope=$scope&show_dialog=$DEBUG}',
+        userAgent:
+            'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36');
     flutterWebviewPlugin.onUrlChanged.listen((String url) async {
       if (url.contains('?code=')) {
         final String code =
