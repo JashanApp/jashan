@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:adhara_socket_io/adhara_socket_io.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
@@ -12,22 +12,33 @@ class SpotifyPlayer {
   final Function onSongEnd;
   final Function onSongPause;
   final Function onSongChange;
-  final SocketIOManager manager = SocketIOManager();
-  SocketIO socket;
+  IO.Socket socket;
 
-  SpotifyPlayer(
-      {this.user,
-      this.onSongEnd,
-      this.onSongStart,
-      this.onSongPause,
-      this.onSongChange}) {
+  SpotifyPlayer({this.user,
+    this.onSongEnd,
+    this.onSongStart,
+    this.onSongPause,
+    this.onSongChange}) {
     initSocket();
   }
 
   void initSocket() async {
-    socket = await manager.createInstance(SocketOptions(
-      'https://spotify-connect-ws.herokuapp.com/connect', // todo host our own
-    ));
+    socket = IO.io('https://spotify-connect-ws.herokuapp.com/connect',
+      <String, dynamic>{
+        'transports': ['websocket']
+      },
+    );
+    socket.on('connect', (_) {
+      socket.emitWithAck('initiate', [
+        {'accessToken': "${user.accessToken}"}
+      ]);
+    });
+    socket.on('reconnect', (_) {
+      print('reconnect');
+    });
+    socket.on('error', (data) {
+      print('error from socket: $data');
+    });
     socket.on("track_end", (message) {
       new Timer(Duration(seconds: 1), () {
         if (onSongEnd != null) {
@@ -51,30 +62,6 @@ class SpotifyPlayer {
       }
     });
     socket.connect();
-    socket.onReconnect((data) {
-      print('reconnect');
-    });
-    socket.onReconnecting((data) {
-      print('trying to reconnect');
-    });
-    socket.onReconnectError((data) {
-      print('reconnect error $data');
-    });
-    socket.onReconnectFailed((data) {
-      print('reconnect failed');
-    });
-    socket.onConnect((data) {
-      socket.emit('initiate', [
-        {"accessToken": '${user.accessToken}'}
-      ]);
-      print('initiated');
-    });
-    socket.onDisconnect((data) {
-      print('disconnected');
-    });
-    socket.onError((data) {
-      print('got an error: $data');
-    });
   }
 
   void playSong(Track song) async {
@@ -117,6 +104,6 @@ class SpotifyPlayer {
   }
 
   void dispose() async {
-    await manager.clearInstance(socket);
+    socket.disconnect();
   }
 }

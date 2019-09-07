@@ -59,7 +59,11 @@ class PartyPageState extends State<PartyPage> {
     _spotifyPlayer = new SpotifyPlayer(
       user: widget.owner,
       onSongEnd: () {
+        if (!_partyStarted || _currentlyPlayingSong == null) {
+          return;
+        }
         setState(() {
+          widget.partyReference.collection('tracks').document(_currentlyPlayingSong.uri).delete();
           if (_queue.length >= 1) {
             _currentlyPlayingSong = _queue.removeFirst();
             if (widget.user == widget.owner) {
