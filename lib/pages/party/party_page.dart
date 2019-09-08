@@ -91,6 +91,9 @@ class PartyPageState extends State<PartyPage> {
       },
       onSongChange: () async {
         Track currentSong = await _spotifyPlayer.getCurrentSongPlaying();
+        if (currentSong == null || _currentlyPlayingSong.uri == null) {
+          return;
+        }
         if (currentSong.uri != _currentlyPlayingSong.uri) {
           setState(() {
             _partyPaused = true;
