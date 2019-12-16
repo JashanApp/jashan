@@ -9,6 +9,7 @@ import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/front/front_page.dart';
 import 'package:jashan/pages/front/register_page.dart';
 import 'package:jashan/pages/home_page.dart';
+import 'package:jashan/util/visual_utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInPage extends FrontPage {
@@ -196,6 +197,7 @@ class LogInPageState extends State<LogInPage> {
     _verifyUsername();
     _verifyPassword();
     if (_formKey.currentState.validate()) {
+      showLoadingDialog(context);
       try {
         String email;
         if (_username.contains('@')) {
@@ -210,6 +212,7 @@ class LogInPageState extends State<LogInPage> {
                 'An account with that username does not exist.';
             _passwordVerification = null;
             _formKey.currentState.validate();
+            Navigator.pop(context);
             return;
           } else {
             var data = snapshot.documents.removeLast();
@@ -226,6 +229,7 @@ class LogInPageState extends State<LogInPage> {
           prefs.setString('username', _username);
           prefs.setBool('spotify', false);
         }
+        Navigator.pop(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -280,8 +284,11 @@ class LogInPageState extends State<LogInPage> {
     flutterWebviewPlugin.onHttpError.listen((WebViewHttpError item) {
       print("   WebView    onHttpError.code: ${item.code}");
     });
+    bool loading = false;
     flutterWebviewPlugin.onUrlChanged.listen((String url) async {
-      if (url.contains('?code=')) {
+      if (url.contains('?code=') && !loading) {
+        loading = true;
+        showLoadingDialog(context);
         final String code =
             url.substring(url.indexOf('?code=') + '?code='.length);
         flutterWebviewPlugin.close();
@@ -342,12 +349,15 @@ class LogInPageState extends State<LogInPage> {
             prefs.setBool('spotify', true);
           }
           jashanUser.accessToken = token['access_token'];
+          Navigator.pop(context);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => HomePage(jashanUser),
             ),
           );
+        } else {
+          Navigator.pop(context);
         }
       }
     });
@@ -363,6 +373,7 @@ class LogInPageState extends State<LogInPage> {
       if (spotify) {
         _logInWithSpotify(context);
       } else {
+        showLoadingDialog(context);
         try {
           await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password);
@@ -384,6 +395,7 @@ class LogInPageState extends State<LogInPage> {
           );
           print(e.message);
         }
+        Navigator.pop(context);
       }
     }
   }
