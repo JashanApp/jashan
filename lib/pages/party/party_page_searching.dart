@@ -14,8 +14,9 @@ class PartyPageSearching extends StatefulWidget {
   final QueueList<TrackQueueItem> queue;
   final Function(TrackQueueItem trackQueueItem) onAddSong;
   final Map<String, JashanQueueList<String>> votes;
+  final Map<String, JashanQueueList<String>> downvotes;
 
-  PartyPageSearching(this.partyOwner, this.queue, this.votes, this.onAddSong);
+  PartyPageSearching(this.partyOwner, this.queue, this.votes, this.downvotes, this.onAddSong);
 
   @override
   State<StatefulWidget> createState() {
@@ -136,7 +137,8 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         body: '''
       {
         "token": "${widget.partyOwner.accessToken}",
-        "upvotes_for_user": ${widget.votes.toString()}
+        "upvotes_for_user": ${widget.votes.toString()},
+        "downvotes_for_user": ${widget.downvotes.toString()}
       }
       ''');
     List<String> trackUris = recommendationsResponse.body.replaceAll("'", "").split(",");

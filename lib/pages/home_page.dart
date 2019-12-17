@@ -5,6 +5,7 @@ import 'package:jashan/pages/connect_page.dart';
 import 'package:jashan/pages/create_party_page.dart';
 import 'package:jashan/pages/settings_page.dart';
 import 'package:jashan/util/spotify_utilities.dart';
+import 'package:jashan/util/visual_utilities.dart';
 
 class HomePage extends StatelessWidget {
   final JashanUser user;
@@ -124,6 +125,7 @@ class HomePage extends StatelessWidget {
   }
 
   void _host(BuildContext context) async {
+    showLoadingDialog(context);
     if (user.accessToken != null) {
       markDeviceAsActive(user, scaffoldKey.currentState, () {
         Navigator.push(
@@ -143,6 +145,7 @@ class HomePage extends StatelessWidget {
         ),
       );
     }
+    Navigator.pop(context);
   }
 
   void _connect(BuildContext context) {

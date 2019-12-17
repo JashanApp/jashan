@@ -11,7 +11,9 @@ class TrackQueueItem extends Track implements Comparable {
   int addedTimeStamp;
 
   TrackQueueItem.fromDocumentReference(DocumentSnapshot snapshot) :
-      super(thumbnailUrl: snapshot.data['thumbnail_url'],
+      super(
+          thumbnail: Image.network(snapshot.data['thumbnail_url']),
+          thumbnailUrl: snapshot.data['thumbnail_url'],
           title: snapshot.data['title'],
           artist: snapshot.data['artist'],
           uri: snapshot.data['uri'],

@@ -9,7 +9,7 @@ void markDeviceAsActive(JashanUser user, ScaffoldState scaffoldState, Function o
       'https://api.spotify.com/v1/me/player/devices',
       headers: {'Authorization': 'Bearer ${user.accessToken}'});
   List availableDevices = json.decode(availableDevicesResponse.body)['devices'];
-  if (availableDevices.length > 0) {
+  if (availableDevices != null && availableDevices.length > 0) {
     await put('https://api.spotify.com/v1/me/player',
         headers: {
         'Authorization': 'Bearer ${user.accessToken}',

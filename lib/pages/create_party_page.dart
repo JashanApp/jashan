@@ -5,10 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:jashan/data/party_info.dart';
 import 'package:jashan/data/track.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
-import 'package:jashan/util/text_utilities.dart';
 import 'package:jashan/widgets/track_card.dart';
 
 class StartPartyPage extends StatefulWidget {
@@ -38,7 +38,11 @@ class _StartPartyPageState extends State<StartPartyPage> {
     super.initState();
     _idForPlaylist[_StartPartyPageState.defaultDropboxText] = null;
     get('https://api.spotify.com/v1/me/playlists',
-            headers: {'Authorization': 'Bearer ${widget.user.accessToken}'})
+            headers: {
+              'Authorization': 'Bearer ${widget.user.accessToken}',
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            })
         .then((response) {
       setState(() {
         Map playlistsResult = json.decode(response.body);
@@ -133,9 +137,6 @@ class _StartPartyPageState extends State<StartPartyPage> {
                         border: OutlineInputBorder(),
                         hintText: 'Create New Playlist Name',
                       ),
-                    ),
-                    Divider(
-                      color: Colors.black,
                     ),
                   ],
                 ),
@@ -288,9 +289,11 @@ class _StartPartyPageState extends State<StartPartyPage> {
         MaterialPageRoute(
           builder: (context) =>
               PartyPage(
-                id: partyId,
-                name: _selectedText,
-                owner: widget.user,
+                partyInfo: PartyInfo(
+                  id: partyId,
+                  title: _selectedText,
+                  owner: widget.user,
+                ),
                 user: widget.user,
                 initialTracks: _tracks,
               ),

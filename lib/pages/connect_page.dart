@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jashan/data/party_info.dart';
 import 'package:jashan/data/user.dart';
 import 'package:jashan/pages/party/party_page.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -138,9 +139,11 @@ class _PinAndJoinWidgetsState extends State<_PinAndJoinWidgets> {
           context,
           MaterialPageRoute(
             builder: (context) => PartyPage(
-              id: int.parse(pin),
-              name: snapshot.data['party_name'],
-              owner: owner,
+              partyInfo: PartyInfo(
+                id: int.parse(pin),
+                title: snapshot.data['party_name'],
+                owner: owner,
+              ),
               user: widget.user,
             ),
           ),

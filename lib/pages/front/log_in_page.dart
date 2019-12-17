@@ -269,7 +269,7 @@ class LogInPageState extends State<LogInPage> {
     const String RESPONSE_TYPE = 'code';
     const String REDIRECT_URI = 'https://google.com';
     final String scope = Uri.encodeFull(
-        'user-read-playback-state user-modify-playback-state user-read-email playlist-modify-private playlist-modify-public');
+        'user-read-playback-state user-modify-playback-state user-read-email playlist-read-private playlist-modify-private playlist-modify-public');
     const bool DEBUG = false;
     // todo add a state
 
