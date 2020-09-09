@@ -1,5 +1,5 @@
 {
-	"token": "BQCgXGB9SQWQ1UqwdVWT1SpKvjxD3IF6w6I2ec60pDNdo4o3sTrkFHpkhFL6ZTDMK-MSJaT-50fcqDE1MrznA_9-tva4OZTUV9KGKhMtPPYj1drSlStRMIlfZ5zPuqD8eAkY_NWv2uCD5LNut3vBikY9H-LvJPM3OACrvZkrmjROxtGBm0DKQQXmEUiIwhqwoi8wiLwu1QZbBhWXLfCffg",
+	"token": "REDACTED",
 	"upvotes_for_user": {
 		"5": [],
 		"167": ["spotify:track:6U8EShYiwNNrGogCxTeFm2", "spotify:track:5LxQohFfm9A4V1VSTS1RDG", "spotify:track:1dD1aarWotVIiFo5gGdMc2"],
