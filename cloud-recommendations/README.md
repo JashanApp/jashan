@@ -1,8 +1,6 @@
-# Cloud Recommendations
+# Recommendation Algorithm
 
 The code here was hosted on Google Cloud Platform and deployed as a Cloud Function to respond to HTTP requests from the Jashan mobile application with song recommendations for the group.
-
-## Recommendation Algorithm
 
 Jashan uses the upvotes and downvotes of users in a party to generate song recommendations that appeal to the entire group. This is a way for people to discover songs at the intersection of their music tastes. Here is a brief outline of the algorithm:
 
@@ -16,7 +14,7 @@ Then, calculate the average d, e, s, a, i, and v of all songs in the dataframe.
 
 Next, using the [Nelder–Mead method](https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method), iteratively change the values of d, e, s, a, i, and v to minimize the error. The error is defined as the sum of squared differences between the current values of the six features and each of the entries in df_final_standardized. 
 
-<img src="https://render.githubusercontent.com/render/math?math=\text{Error} = 1 \+ 1">
+<img src="https://render.githubusercontent.com/render/math?math=\text{Error} = \displaystyle \sum_{\text{entry} \in \text{df_final_standardized}}((d_{\text{current}}-d_{\text{entry}})^2 &2B (e_{\text{current}}-e_{\text{entry}})^2 &2B (s_{\text{current}}-s_{\text{entry}})^2 &2B (a_{\text{current}}-a_{\text{entry}})^2 &2B (i_{\text{current}}-i_{\text{entry}})^2 &2B (v_{\text{current}}-v_{\text{entry}})^2)">
 
 Feed the final optimized values of d, e, s, a, i, and v (along with 5 randomly chosen songs from df_final_standardized as seeds) into the Spotify recommendation engine to generate 100 new songs for the entire group. This is the final output of the algorithm.
 
