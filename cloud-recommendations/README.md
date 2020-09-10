@@ -1,6 +1,6 @@
 # Recommendation Algorithm
 
-The code here was hosted on Google Cloud Platform and deployed as a Cloud Function to respond to HTTP requests from the Jashan mobile application with song recommendations for the group.
+The code here was hosted on Google Cloud Platform and deployed as a Cloud Function to respond to HTTP requests from the Jashan mobile application with recommendations.
 
 Jashan uses the upvotes and downvotes of users in a party to generate song recommendations that appeal to the entire group. This is a way for people to discover songs at the intersection of their music tastes. Here is a brief outline of the algorithm:
 
