@@ -1,6 +1,12 @@
 # Jashan
 &lt;Juh-shuhn> A playlist collaboration app that allows people who are in close proximity to curate a music playlist together on a host phone in real-time.
 
+<p float="middle">
+  <img src="img/login.png" width="200" />
+  <img src="img/party.png" width="200" /> 
+  <img src="img/search.png" width="200" />
+</p>
+
 ## A New Experience
 Everyone has a unique music taste. When you are by yourself, you tend to listen to songs that fit your specific music taste. But there's a whole world of music out there that you have never experienced! Discovering songs with friends is not only an incredibly fun way to bond with others, but it is also a refreshing change in perspective!
 
