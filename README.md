@@ -24,7 +24,7 @@ We give you similarity scores with others in your group so you can find those wh
 
 ## Setup
 
-The following are requirements to run the FeatureMe app:
+The following are requirements to run the Jashan app:
 
 - [Flutter](https://flutter.dev/docs/get-started/install)
 - [Android SDK](https://developer.android.com/studio#downloads) (if using Android to run)
