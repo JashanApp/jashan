@@ -51,7 +51,7 @@ flutter doctor
 ```
 Resolve all problems found.
 
-#### If Using Android to Run
+### If Using Android to Run
 
 **Setting up Firebase**
 
@@ -64,7 +64,7 @@ as the platform. For the Android package name, enter `com.jashan.app.jashan`.
 Then, after filling any optional data fields, click `Register app`.
 
 Download the configuration file and place the file in the `android/app/` folder.
-Ensure that the `.gitignore` ignore commits the JSON file.
+Ensure that the `.gitignore` ignores the JSON file.
 
 You have set up Firebase for Android!
 
@@ -78,7 +78,7 @@ After the AVD instance sets up, run the following command:
 flutter run
 ```
 
-#### If Using iOS to Run
+### If Using iOS to Run
 
 **Setting up Firebase**
 
