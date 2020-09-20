@@ -2,9 +2,14 @@
 &lt;Juh-shuhn> A playlist collaboration app that allows people who are in close proximity to curate a music playlist together on a host phone in real-time.
 
 <p float="middle">
-  <img src="img/login.png" width="200" />
-  <img src="img/party.png" width="200" /> 
-  <img src="img/search.png" width="200" />
+  <img src="img/login.png" width="200"  alt="Login page"/>
+  <img src="img/start-party.png" width="200"  alt="Starting party page"/> 
+  <img src="img/party.png" width="200"  alt="Party page"/> 
+  <img src="img/votes.gif" width="200"  alt="View upvotes and downvotes"/>
+  <img src="img/recommending.png" width="200"  alt="View AI-generated recommendations"/>
+  <img src="img/searching.png" width="200"  alt="Search for your favorite songs"/>
+  <img src="img/pausing.gif" width="200"  alt="Pause playback with the native Spotify app"/>
+  <img src="img/join-party.png" width="200"  alt="Join existing parties"/>
 </p>
 
 ## A New Experience
