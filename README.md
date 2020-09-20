@@ -106,7 +106,7 @@ After the Simulator is set up, run the following command:
 flutter run
 ```
 
-#### IDEs
+### IDEs
 
 Use either one of the following:
 
