@@ -3,6 +3,7 @@
 
 [Download today on the Google Play Store!](https://play.google.com/store/apps/details?id=com.jashan.app.jashan&hl=en_US)
 <br />
+<br />
 
 <p float="middle">
   <img src="img/login.png" width="200"  alt="Login page"/>
