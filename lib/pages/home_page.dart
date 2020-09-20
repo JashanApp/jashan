@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'Welcome ${user.username}!',
+                      'Welcome!',
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,

@@ -77,8 +77,8 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
         itemBuilder: (context, index) {
           if (index == 0) {
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text("Recommended Songs", style: TextStyle(color: Colors.black),),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              child: Text(_searchQuery.length < 2 ? "Recommended Songs" : "Search Results", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.deepPurple),),
             );
           }
           final Track data = _searchQuery.length < 2 ? _recommendedItems[index - 1] : _searchItems[index - 1];
@@ -147,25 +147,27 @@ class _PartyPageSearchingState extends State<PartyPageSearching> {
       Response songInfoResponse = await get('https://api.spotify.com/v1/tracks/$id',
           headers: {'Authorization': 'Bearer ${widget.partyOwner.accessToken}'});
       Map songInfo = json.decode(songInfoResponse.body);
-      String imageUrl = songInfo['album']['images'][0]['url'];
-      String name = songInfo['name'];
-      int durationMs = songInfo['duration_ms'];
-      List artists = songInfo['artists'];
-      String artistsString = artists[0]['name'];
-      for (int i = 1; i < artists.length; i++) {
-        artistsString += ', ${artists[i]['name']}';
+      if (songInfo['album'].containsKey('image')) {
+        String imageUrl = songInfo['album']['images'][0]['url'];
+        String name = songInfo['name'];
+        int durationMs = songInfo['duration_ms'];
+        List artists = songInfo['artists'];
+        String artistsString = artists[0]['name'];
+        for (int i = 1; i < artists.length; i++) {
+          artistsString += ', ${artists[i]['name']}';
+        }
+        setState(() {
+          _recommendedItems.add(
+            Track(
+                thumbnail: Image.network(imageUrl),
+                thumbnailUrl: imageUrl,
+                title: name,
+                artist: artistsString,
+                uri: uri,
+                durationMs: durationMs),
+          );
+        });
       }
-      setState(() {
-        _recommendedItems.add(
-          Track(
-              thumbnail: Image.network(imageUrl),
-              thumbnailUrl: imageUrl,
-              title: name,
-              artist: artistsString,
-              uri: uri,
-              durationMs: durationMs),
-        );
-      });
     });
   }
 }

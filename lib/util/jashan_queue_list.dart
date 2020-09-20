@@ -15,6 +15,9 @@ class JashanQueueList<E> extends QueueList<E> {
 
   @override
   String toString() {
+    if (length == 0) {
+      return "[]";
+    }
     String result = "[";
     forEach((item) {
       result += "\"${item.toString()}\", ";
