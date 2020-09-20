@@ -114,9 +114,3 @@ Use either one of the following:
     - [Android Studio](https://developer.android.com/studio#downloads) if one cannot use IntelliJ Ultimate - [guide](https://flutter.dev/docs/get-started/editor?tab=androidstudio)
 - [Visual Studio Code](https://code.visualstudio.com/) - [guide](https://flutter.dev/docs/get-started/editor?tab=vscode)
 - [Emacs](https://www.gnu.org/software/emacs/download.html) - [guide](https://flutter.dev/docs/get-started/editor?tab=emacs)
-
-### Setting up Google Firebase
-
-Once the application is set up in an IDE, it is ready to be set up with
-Firebase. To do so, . Then, create
-either an Android project, an iOS project, or both. Follow the 
