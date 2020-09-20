@@ -2,7 +2,7 @@
 &lt;Juh-shuhn> A playlist collaboration app that allows people who are in close proximity to curate a music playlist together on a host phone in real-time.
 
 [Download today on the Google Play Store!](https://play.google.com/store/apps/details?id=com.jashan.app.jashan&hl=en_US)
-
+<br />
 
 <p float="middle">
   <img src="img/login.png" width="200"  alt="Login page"/>
