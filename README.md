@@ -48,6 +48,23 @@ Resolve all problems found.
 
 #### If Using Android to Run
 
+**Setting up Firebase**
+
+A Firebase database for Android is a requirement to run Jashan. Note that
+steps may be taken for each operating system. That is, following these
+steps does not allow for the iOS application to run.
+
+On the Firebase Console, select `Add App`. Then, select Android
+as the platform. For the Android package name, enter `com.jashan.app.jashan`.
+Then, after filling any optional data fields, click `Register app`.
+
+Download the configuration file and place the file in the `android/app/` folder.
+Ensure that the `.gitignore` ignore commits the JSON file.
+
+You have set up Firebase for Android!
+
+**Setting up the Android simulator**
+
 After installing the tools, set up a device using the AVD Manager. Then, run the AVD instance.
 
 After the AVD instance sets up, run the following command:
@@ -57,6 +74,25 @@ flutter run
 ```
 
 #### If Using iOS to Run
+
+**Setting up Firebase**
+
+A Firebase database for iOS is a requirement to run Jashan. Note that
+steps may be taken for each operating system. That is, following these
+steps does not allow for the Android application to run.
+
+On the Firebase Console, select `Add App`. Then, select iOS
+as the platform. For the iOS bundle ID, enter `com.jashan.app.jashan`.
+Then, after filling any optional data fields, click `Register app`.
+
+Download the configuration file. Open the `ios/runner.xcworkspace` 
+directory with Xcode, then drag the plist file into the `Runner/Runner` 
+directory. Ensure the `.gitignore` ignores the `GoogleService-Info.plist` 
+file.
+
+You have set up Firebase for iOS!
+
+**Setting up the iOS simulator**
 
 After installing the tools, set up a device using the Simulator application. Then, run the Simulator.
 
@@ -73,3 +109,9 @@ Use either one of the following:
     - [Android Studio](https://developer.android.com/studio#downloads) if one cannot use IntelliJ Ultimate - [guide](https://flutter.dev/docs/get-started/editor?tab=androidstudio)
 - [Visual Studio Code](https://code.visualstudio.com/) - [guide](https://flutter.dev/docs/get-started/editor?tab=vscode)
 - [Emacs](https://www.gnu.org/software/emacs/download.html) - [guide](https://flutter.dev/docs/get-started/editor?tab=emacs)
+
+### Setting up Google Firebase
+
+Once the application is set up in an IDE, it is ready to be set up with
+Firebase. To do so, . Then, create
+either an Android project, an iOS project, or both. Follow the 
